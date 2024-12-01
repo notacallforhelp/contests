@@ -1,0 +1,13 @@
+Case #1: 0
+Case #2: 2
+Case #3: 3
+Case #4: 9998
+Case #5: 9998
+Case #6: 9998
+Case #7: 9998
+Case #8: 9998
+Case #9: 35
+Case #10: 3
+Case #11: 7
+Case #12: 31
+Case #13: 8
