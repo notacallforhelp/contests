@@ -102,7 +102,20 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
-    
+    int n,m; cin>>n>>m;
+    int curr=0;
+    int ct=0;
+    vector<string> S(n); for(auto &i:S)cin>>i;
+
+    for(int i=0;i<n;i++)
+    {
+        if(curr+S[i].length()>m)
+        {
+            cout << ct << endl; return;
+        }
+        curr += S[i].length(); ++ct;
+    }
+    cout << ct << endl;
 }
 
 int32_t main()

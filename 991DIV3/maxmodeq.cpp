@@ -102,6 +102,8 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
+    int n,q; cin>>n>>q;
+    vector<int> A(n); for(auto &i:A) cin>>i;
     
 }
 

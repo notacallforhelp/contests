@@ -102,7 +102,51 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
-    
+    int n,k; cin>>n>>k;
+
+    if(n<=50&&k>(1ll<<(n-1)))
+    {
+        cout << "-1" << endl;
+        return;
+    }
+    --k;
+    vector<int> v(n);
+    //v[n-1]=n;
+
+    vector<int> hmm(n);
+    int idx=0;
+    while(k)
+    {
+        hmm[idx]=k%2;
+        ++idx;
+        k/=2;
+    }
+    int left=0;
+    int right=n-1;
+    //while (hmm.size() < n) hmm.push_back(0);
+    for(auto ele:hmm)
+    {
+        cout << ele << ' ';
+    }
+    cout << endl;
+    for(int i=1,j=0;i<=n&&j<hmm.size();i++,j++)
+    {
+        if(hmm[j]==0)
+        {
+            v[left]=i;
+            ++left;
+        }
+        else
+        {
+            v[right]=i;
+            --right;
+        }
+    }
+    for(auto ele:v)
+    {
+        cout << ele << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()

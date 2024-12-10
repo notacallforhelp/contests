@@ -102,7 +102,31 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
-    
+    int n; cin>>n;int k; cin>>k;
+    vector<int> A(n); for(auto &i:A)cin>>i;
+    for(int i=0;i<n;i++)
+    {
+        bool flag=true;
+        for(int j=0;j<n;j++)
+        {
+            if(i==j)
+            {
+                continue;
+            }
+            if(abs(A[i]-A[j])%k==0)
+            {
+                flag=false;
+                break;
+            }
+        }
+        if(flag)
+        {
+            cout << "YES\n";
+            cout << i+1 << endl;
+            return;
+        }
+    }
+    cout << "NO\n";
 }
 
 int32_t main()

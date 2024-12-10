@@ -102,16 +102,42 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
-    
+    int n, k; cin>>n>>k;
+    if(n<=50&&k>(1ll<<(n-1)))
+    {
+        cout << -1 << endl;
+        return;
+    }
+    k--;
+
+    deque<int> ans;
+    ans.push_back(n);
+    for(int i=n-1;i>=1;i--)
+    {
+        if(k%2)
+        {
+            ans.push_back(i);
+        }
+        else
+        {
+            ans.push_front(i);
+        }
+        k=k/2;
+    }
+    for(auto ele:ans)
+    {
+        cout << ele << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()
 {
-    ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+    //ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
 
     //setIO("problemname");
 
-    int t; cin>>t;
+    int t=1; 
 
     while(t--)
     {

@@ -102,7 +102,35 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
-    
+    string s; cin>>s;
+
+    for(int i=1;i<s.length();i++)
+    {
+        int num = s[i]-48;
+
+        for(int j=9;j>=0;j--)
+        {
+            if(num-j<0)
+            {
+                continue;
+            }
+            if(i-j<0)
+            {
+                continue;
+            }
+            if(s[i-j]<s[i]-j)
+            {
+                char temp=s[i]-j;
+                for(int k=i;k>=i-j;k--)
+                {
+                    s[k]=s[k-1];
+                }
+                s[i-j]=temp;
+                break;
+            }
+        }
+    }
+    cout << s << endl;
 }
 
 int32_t main()

@@ -102,7 +102,62 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
-    
+    int n,k; cin>>n>>k;
+
+    vector<int> P(n);
+    for(int i=0;i<n;i++)
+    {
+        P[i]=i+1;
+    }
+    int highest_sum=0;
+    do
+    {
+        int sum=0;
+        for(int i=0;i<n;i++)
+        {
+            int cur_min=LLONG_MAX;
+            for(int j=i;j<n;j++)
+            {
+                cur_min=min(cur_min,P[j]);
+                sum += cur_min;
+            }
+        }
+        if(n==6&&sum!=56)
+        {
+            continue;
+        }
+        if(n==7&&sum!=84)
+        {
+            continue;
+        }
+        if(n==2&&sum!=4)
+        {
+            continue;
+        }
+        if(n==3&&sum!=10)
+        {
+            continue;
+        }
+        if(n==4&&sum!=20)
+        {
+            continue;
+        }
+        if(n==5&&sum!=35)
+        {
+            continue;
+        }
+        for(auto ele:P)
+        {
+            cout << ele << " ";
+        }
+        cout << ": ";
+        cout << sum;
+        highest_sum = max(highest_sum,sum);
+
+        cout << endl;
+    }
+    while(next_permutation(P.begin(),P.end()));
+    cout << highest_sum << endl;
 }
 
 int32_t main()

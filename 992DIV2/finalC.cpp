@@ -100,9 +100,45 @@ int64_t C(int64_t n, int64_t k) {
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+void func(int l,int r,int i,int k,vector<int> &answer)
+{
+    if(l==r)
+    {
+        answer[l]=i;
+        return;
+    }
+    int sz = r-l-1;
+    if(sz<60&&((1ll<<sz)<k))
+    {
+        answer[r]=i;
+        k=k-(1ll<<sz);
+        func(l,r-1,i+1,k,answer);
+    }
+    else
+    {
+        answer[l]=i;
+        func(l+1,r,i+1,k,answer);
+    }
+}
+
 void solve()
 {
-    
+    int n,k; cin>>n>>k;
+
+    if((n-1<60)&&(1ll<<(n-1)<k))
+    {
+        cout << -1 << endl;
+        return;
+    }
+
+    vector<int> answer(n);
+    func(0,n-1,1,k,answer);
+
+    for(auto ele:answer)
+    {
+        cout << ele << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()

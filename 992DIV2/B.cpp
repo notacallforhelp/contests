@@ -102,7 +102,26 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
-    
+    int n; cin>>n;
+    /*if(n==1)
+    {
+        cout << 1 << endl;
+        return;
+    }
+    if(n<=4)
+    {
+        cout << 2 << endl;
+        return;
+    }*/
+
+    int start=1;
+    int ct=1;
+    while(start<n)
+    {
+        start = start*2+2;
+        ++ct;
+    }
+    cout << ct << endl;
 }
 
 int32_t main()

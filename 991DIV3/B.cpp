@@ -102,7 +102,45 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
-    
+    int n; cin>>n;
+    vector<int> A(n); for(auto &i:A)cin>>i;
+
+    int sum=0;
+    for(int i=0;i<n;i++)
+    {
+        sum += A[i];
+    }
+    if((sum%n)!=0)
+    {
+        cout << "NO" << endl;
+        return;
+    }
+    int target = sum/n;int sum_even=0;int sum_odd=0;
+
+    for(int i=0;i<n;i=i+2)
+    {
+        sum_even += A[i];
+    }
+    for(int i=1;i<n;i=i+2)
+    {
+        sum_odd += A[i];
+    }
+    int num_even = (n+1)/2;
+    int num_odd = n/2;
+    if((sum_even%num_even)!=0||(sum_odd%num_odd)!=0)
+    {
+        cout << "NO\n";
+        return;
+    }
+    int target_even = sum_even/num_even;
+    int target_odd = sum_odd/num_odd;
+
+    if(target_even!=target||target_odd!=target)
+    {
+        cout << "NO\n";
+        return;
+    }
+    cout << "YES\n";
 }
 
 int32_t main()

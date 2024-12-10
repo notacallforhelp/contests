@@ -102,7 +102,40 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
+    int n,k; cin>>n>>k;
     
+    if((n-1)<60&&(1ll<<(n-1))<k)
+    {
+        cout << -1 << endl;
+        return;
+    }
+
+    vector<int> ans(n);
+
+    int l=0;
+    int r = n-1;
+
+    for(int i=0;i<n;i++)
+    {
+        int sz = r-l-1;
+        if((sz<60)&&(1ll<<sz)<k)
+        {
+            k=k-(1ll<<sz);
+            ans[r]=i+1;
+            --r;
+        }
+        else
+        {
+            ans[l]=i+1;
+            ++l;
+        }
+    }
+
+    for(auto ele:ans)
+    {
+        cout << ele << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()
@@ -111,7 +144,7 @@ int32_t main()
 
     //setIO("problemname");
 
-    int t; cin>>t;
+    int t=1; //cin>>t;
 
     while(t--)
     {

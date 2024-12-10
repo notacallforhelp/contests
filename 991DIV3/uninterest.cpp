@@ -102,7 +102,53 @@ int64_t C(int64_t n, int64_t k) {
 
 void solve()
 {
-    
+    string s; cin>>s;    //2 gives a sum boost of 2, 3s give a sum boost of 6
+    int sum=0;
+    map<int,int> M;
+    for(int i=0;i<s.length();i++)
+    {
+        int num = s[i]-48;
+        if(num==2)
+        {
+            ++M[num];
+        }
+        else if(num==3)
+        {
+            ++M[6];
+        }
+        sum += num;
+    }
+    if((sum%9)==0)
+    {
+        cout << "YES" << endl;
+        return;
+    }
+    //cout << sum << endl;
+    int sumneeded= 9-sum%9;
+    //cout << sumneeded << endl;
+    if(sumneeded%2!=0)
+    {
+        sumneeded += 9;
+    }
+    while(M[6]>0&&sumneeded-6>=0)
+    {
+        sumneeded=sumneeded-6;
+        --M[6];
+    }
+    if(sumneeded==0)
+    {
+        cout << "YES" << endl; return;
+    }
+    while(M[2]>0&&sumneeded-2>=0)
+    {
+        sumneeded=sumneeded-2;
+        --M[2];
+    }
+    if(sumneeded==0)
+    {
+        cout << "YES" << endl; return;
+    }
+    cout << "NO" << endl;
 }
 
 int32_t main()
