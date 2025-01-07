@@ -87,18 +87,6 @@ void find_divisors()
         }
     }
 }
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {

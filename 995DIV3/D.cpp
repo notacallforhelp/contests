@@ -26,7 +26,30 @@ struct range
     }
 };
 
-/*
+/*binary search template
+
+while(hi-low>0)
+    {
+        ll mid = (low+hi)/2;
+        ll products = 0;
+        for(int i=0;i<n;i++)
+        {
+            products += min(mid/A[i],(ll)1e9);
+        }
+        if(products>=k)
+        {
+            if(mid<answer)
+            {
+                answer = mid;
+            }
+            hi = mid;
+        }
+        else
+        {
+            low = mid+1;
+        }
+    }
+
 FOR SIMULATING ALL CELLS THAT SHARE A WALL WITH CURRENT CELL, GRID IS OF SIZE N*M
 
 int dx[]={-1,0,+1,0};
@@ -35,9 +58,6 @@ int dy[]={0,-1,0,+1};
 inline bool in(int i,int j){
     return (0<=i&&i<n&&0<=j&&j<m);
 }
-
-
-binary exp 
 
 ll binpow(ll a,ll b)
 {
@@ -52,15 +72,12 @@ ll binpow(ll a,ll b)
     return binpow((a*a)%mod,b/2);
 }
 
-ceil 
-
 ll ceil2(ll a, ll b) {
     if (a == 0) return 0;
     return (a - 1)/b + 1;
 }
 
 COMBINATORICS TEMPLATE 
-
 const int N = 2e5 + 5, mod = 1e9 + 7;
 int64_t fact[N];
 int64_t pw(int64_t a, int64_t b) {
@@ -87,18 +104,6 @@ void find_divisors()
         }
     }
 }
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {
@@ -108,7 +113,67 @@ void dfs(int current_node) {
 
 void solve()
 {
-    
+    int n,x,y; cin>>n>>x>>y;
+    vector<int> A(n); for(auto &i:A)cin>>i;
+
+    sort(A.begin(),A.end());
+
+    int sum = 0;
+    int valid = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        sum += A[i];
+    }
+
+    int lb = sum-y;
+    int ub = sum-x;
+
+    for(int i=0;i<n-1;i++)
+    {
+        int lo = i+1;
+        int hi = n-1;
+
+        int idx1=n,idx2=-1;
+
+        int LB = lb-A[i];
+        int UB = ub-A[i];
+
+
+        while(lo<=hi)
+        {
+            int mid = lo + (hi-lo)/2;
+            if(A[mid]>=LB)
+            {
+                idx1=min(mid,idx1);
+                hi=mid-1;
+            }
+            else
+            {
+                lo=mid+1;
+            }
+        }
+
+        lo=i+1;hi=n-1;
+
+        while(lo<=hi)
+        {
+            int mid = lo+(hi-lo)/2;
+            if(A[mid]<=UB)
+            {
+                idx2=max(idx2,mid);
+                lo=mid+1;
+            }
+            else
+            {
+                hi=mid-1;
+            }
+        }
+
+        int ct = max(idx2-idx1+1,0ll);
+        valid += ct;
+    }
+    cout << valid << endl;
 }
 
 int32_t main()

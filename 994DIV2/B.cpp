@@ -26,7 +26,30 @@ struct range
     }
 };
 
-/*
+/*binary search template
+
+while(hi-low>0)
+    {
+        ll mid = (low+hi)/2;
+        ll products = 0;
+        for(int i=0;i<n;i++)
+        {
+            products += min(mid/A[i],(ll)1e9);
+        }
+        if(products>=k)
+        {
+            if(mid<answer)
+            {
+                answer = mid;
+            }
+            hi = mid;
+        }
+        else
+        {
+            low = mid+1;
+        }
+    }
+
 FOR SIMULATING ALL CELLS THAT SHARE A WALL WITH CURRENT CELL, GRID IS OF SIZE N*M
 
 int dx[]={-1,0,+1,0};
@@ -35,9 +58,6 @@ int dy[]={0,-1,0,+1};
 inline bool in(int i,int j){
     return (0<=i&&i<n&&0<=j&&j<m);
 }
-
-
-binary exp 
 
 ll binpow(ll a,ll b)
 {
@@ -52,15 +72,12 @@ ll binpow(ll a,ll b)
     return binpow((a*a)%mod,b/2);
 }
 
-ceil 
-
 ll ceil2(ll a, ll b) {
     if (a == 0) return 0;
     return (a - 1)/b + 1;
 }
 
 COMBINATORICS TEMPLATE 
-
 const int N = 2e5 + 5, mod = 1e9 + 7;
 int64_t fact[N];
 int64_t pw(int64_t a, int64_t b) {
@@ -76,29 +93,6 @@ int64_t C(int64_t n, int64_t k) {
 	if(n < k) return 0LL;
 	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
 }
-
-void find_divisors()
-{
-    for(int i=1;i<=N;i++)
-    {
-        for(int j=i;j<=N;j+=i)
-        {
-            divisors[j].push_back(i);
-        }
-    }
-}
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {
@@ -108,7 +102,66 @@ void dfs(int current_node) {
 
 void solve()
 {
-    
+    int n; cin>>n;
+    string s; cin>>s;
+
+    int lf_p=-1;
+    int rf_s=-1;
+    for(int i=0;i<n;i++)
+    {
+        if(s[i]=='p')
+        {
+            lf_p=i;
+            break;
+        }
+    }
+    for(int i=n-1;i>=0;i--)
+    {
+        if(s[i]=='s')
+        {
+            rf_s=i;
+            break;
+        }
+    }
+
+    if(lf_p==-1||rf_s==-1)
+    {
+        cout << "YES\n";   ///ppppp, or sssss so obviously can be possible
+        return;
+    }
+
+    if(lf_p<rf_s)
+    {
+        cout << "NO\n";
+        return;
+    }
+    int ct_s = 0;
+    int ct_p = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        if(s[i]=='s') ++ct_s;
+        if(s[i]=='p') ++ct_p;
+    }
+
+    if(ct_p==1)
+    {
+        if(s[n-1]=='p')
+        {
+            cout << "YES\n";
+            return;
+        }
+    }
+    if(ct_s==1)
+    {
+        if(s[0]=='s')
+        {
+            cout << "YES\n";
+            return;
+        }
+    }
+
+    cout << "NO\n";
 }
 
 int32_t main()

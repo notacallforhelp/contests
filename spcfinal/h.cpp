@@ -87,18 +87,6 @@ void find_divisors()
         }
     }
 }
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {
@@ -108,7 +96,22 @@ void dfs(int current_node) {
 
 void solve()
 {
-    
+    int n,k; cin>>n>>k;
+    vector<int> A(n); for(auto &i:A) cin>>i;
+
+    int score = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        int k = __gcd(A[i],k);
+
+        do
+        {
+            
+        }
+        while(k!=1);
+    }
+    cout << score << endl;
 }
 
 int32_t main()
@@ -116,6 +119,10 @@ int32_t main()
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
 
     //setIO("problemname");
+
+    //find_divisors();
+
+    //cout <<"h" << endl;
 
     int t; cin>>t;
 

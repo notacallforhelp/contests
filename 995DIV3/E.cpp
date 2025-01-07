@@ -26,7 +26,30 @@ struct range
     }
 };
 
-/*
+/*binary search template
+
+while(hi-low>0)
+    {
+        ll mid = (low+hi)/2;
+        ll products = 0;
+        for(int i=0;i<n;i++)
+        {
+            products += min(mid/A[i],(ll)1e9);
+        }
+        if(products>=k)
+        {
+            if(mid<answer)
+            {
+                answer = mid;
+            }
+            hi = mid;
+        }
+        else
+        {
+            low = mid+1;
+        }
+    }
+
 FOR SIMULATING ALL CELLS THAT SHARE A WALL WITH CURRENT CELL, GRID IS OF SIZE N*M
 
 int dx[]={-1,0,+1,0};
@@ -35,9 +58,6 @@ int dy[]={0,-1,0,+1};
 inline bool in(int i,int j){
     return (0<=i&&i<n&&0<=j&&j<m);
 }
-
-
-binary exp 
 
 ll binpow(ll a,ll b)
 {
@@ -52,15 +72,12 @@ ll binpow(ll a,ll b)
     return binpow((a*a)%mod,b/2);
 }
 
-ceil 
-
 ll ceil2(ll a, ll b) {
     if (a == 0) return 0;
     return (a - 1)/b + 1;
 }
 
 COMBINATORICS TEMPLATE 
-
 const int N = 2e5 + 5, mod = 1e9 + 7;
 int64_t fact[N];
 int64_t pw(int64_t a, int64_t b) {
@@ -87,18 +104,6 @@ void find_divisors()
         }
     }
 }
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {
@@ -108,7 +113,66 @@ void dfs(int current_node) {
 
 void solve()
 {
-    
+    int n,k; cin>>n>>k;
+    vector<int> A(n); for(auto &i:A)cin>>i;
+    vector<int> B(n); for(auto &i:B)cin>>i;
+
+    vector<pair<int,int>> F(n);
+    vector<pair<int,int>> G(n);
+
+    map<int,int> M;
+
+    for(int i=0;i<n;i++)
+    {
+        ++M[A[i]];
+        F[i]={A[i],B[i]};
+        G[i]={B[i],A[i]};
+    }
+
+    sort(F.begin(),F.end());
+    sort(G.begin(),G.end());
+
+    int earning = 0;
+    int violated = 0;
+    int customers = n;
+
+    int curr_price=0;
+
+    for(int i=0;i<n;i++)
+    {
+        curr_price=F[i].first;
+
+        if(i>0)
+        {
+            ++violated;
+            if(F[i-1].second<curr_price)
+            {
+                --customers;
+            }
+        }
+        earning = max(earning,curr_price*customers);
+
+        if(violated==k)
+        {
+            break;
+        }
+    }
+
+    //cout << earning << endl;
+
+    violated=1;
+    customers=1;
+
+    for(int i=n-1;i>=0;i--)
+    {
+        curr_price= G[i].first;
+
+        if(i<n-1)
+        {
+            ++violated;
+
+        }
+    }
 }
 
 int32_t main()

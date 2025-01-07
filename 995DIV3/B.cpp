@@ -26,7 +26,30 @@ struct range
     }
 };
 
-/*
+/*binary search template
+
+while(hi-low>0)
+    {
+        ll mid = (low+hi)/2;
+        ll products = 0;
+        for(int i=0;i<n;i++)
+        {
+            products += min(mid/A[i],(ll)1e9);
+        }
+        if(products>=k)
+        {
+            if(mid<answer)
+            {
+                answer = mid;
+            }
+            hi = mid;
+        }
+        else
+        {
+            low = mid+1;
+        }
+    }
+
 FOR SIMULATING ALL CELLS THAT SHARE A WALL WITH CURRENT CELL, GRID IS OF SIZE N*M
 
 int dx[]={-1,0,+1,0};
@@ -35,9 +58,6 @@ int dy[]={0,-1,0,+1};
 inline bool in(int i,int j){
     return (0<=i&&i<n&&0<=j&&j<m);
 }
-
-
-binary exp 
 
 ll binpow(ll a,ll b)
 {
@@ -52,15 +72,12 @@ ll binpow(ll a,ll b)
     return binpow((a*a)%mod,b/2);
 }
 
-ceil 
-
 ll ceil2(ll a, ll b) {
     if (a == 0) return 0;
     return (a - 1)/b + 1;
 }
 
 COMBINATORICS TEMPLATE 
-
 const int N = 2e5 + 5, mod = 1e9 + 7;
 int64_t fact[N];
 int64_t pw(int64_t a, int64_t b) {
@@ -87,18 +104,6 @@ void find_divisors()
         }
     }
 }
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {
@@ -108,7 +113,40 @@ void dfs(int current_node) {
 
 void solve()
 {
-    
+    int n,a,b,c; cin>>n>>a>>b>>c;
+
+    int sum = a+b+c;
+
+    int k = n/sum;
+
+    int days = k*3;
+
+    int left = n-k*sum;
+
+    //cout << left << endl;
+
+    if(left==0)
+    {
+        cout << days << endl;
+        return;
+    }
+
+    if(a>=left)
+    {
+        cout << days+1 << endl;
+        return;
+    }
+    if(a+b>=left)
+    {
+        cout << days+2 << endl;
+        return;
+    }
+
+    if(a+b+c>=left)
+    {
+        cout << days+3 << endl;
+        return;
+    }
 }
 
 int32_t main()

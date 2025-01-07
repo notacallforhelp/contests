@@ -26,7 +26,30 @@ struct range
     }
 };
 
-/*
+/*binary search template
+
+while(hi-low>0)
+    {
+        ll mid = (low+hi)/2;
+        ll products = 0;
+        for(int i=0;i<n;i++)
+        {
+            products += min(mid/A[i],(ll)1e9);
+        }
+        if(products>=k)
+        {
+            if(mid<answer)
+            {
+                answer = mid;
+            }
+            hi = mid;
+        }
+        else
+        {
+            low = mid+1;
+        }
+    }
+
 FOR SIMULATING ALL CELLS THAT SHARE A WALL WITH CURRENT CELL, GRID IS OF SIZE N*M
 
 int dx[]={-1,0,+1,0};
@@ -35,9 +58,6 @@ int dy[]={0,-1,0,+1};
 inline bool in(int i,int j){
     return (0<=i&&i<n&&0<=j&&j<m);
 }
-
-
-binary exp 
 
 ll binpow(ll a,ll b)
 {
@@ -52,15 +72,12 @@ ll binpow(ll a,ll b)
     return binpow((a*a)%mod,b/2);
 }
 
-ceil 
-
 ll ceil2(ll a, ll b) {
     if (a == 0) return 0;
     return (a - 1)/b + 1;
 }
 
 COMBINATORICS TEMPLATE 
-
 const int N = 2e5 + 5, mod = 1e9 + 7;
 int64_t fact[N];
 int64_t pw(int64_t a, int64_t b) {
@@ -87,18 +104,6 @@ void find_divisors()
         }
     }
 }
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {
@@ -108,7 +113,49 @@ void dfs(int current_node) {
 
 void solve()
 {
+    int n; cin>>n;
+    vector<int> A(n); for(auto &i:A)cin>>i;
+
+    vector<int> B = A;
+    sort(B.begin(),B.end());
+
+    reverse(B.begin(),B.end());
+
+    map<int,int> m;
+    for(int i=0;i<n;i++)
+    {
+        m[B[i]]=i+1;
+    }
+
+    for(int i=0;i<n;i++)
+    {
+        B[i]=m[A[i]];
+    }
+
+    /*for(auto ele:B)
+    {
+        cout << ele << " ";
+    }
+    cout << endl;*/
+
+    map<int,int> pos;
+    int output = 1;
+
+    for(int i=0;i<n;i++)
+    {
+        pos[B[i]]=i;
+    }
+
+    for(int i=2;i<=n;i++)
+    {
+        if(abs(pos[i-1]-pos[i])!=1)
+        {
+            //cout << i << endl;
+            ++output;
+        }
+    }
     
+    cout << output << endl;
 }
 
 int32_t main()

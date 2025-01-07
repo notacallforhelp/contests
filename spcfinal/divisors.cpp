@@ -87,18 +87,6 @@ void find_divisors()
         }
     }
 }
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {
@@ -106,9 +94,52 @@ void dfs(int current_node) {
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int N = 1e6/2;
+vector<int> divisors[N+1];
+
+void find_divisors()
+{
+    for(int i=1;i<=N;i++)
+    {
+        for(int j=i;j<=N;j+=i)
+        {
+            divisors[j].push_back(i);
+        }
+    }
+}
+
 void solve()
 {
-    
+    int n,k; scanf("%lld %lld",&n,&k);
+    vector<int> A(n); for(auto &i:A) cin>>i;
+
+    int score = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        int mn = min(A[i],k);
+        int mx = max(A[i],k);
+
+        if(mn>1e6/2)
+        {
+            if(mx%mn==0)
+            {
+                ++score;
+            }
+            mn=mn/2;
+        }
+
+        int sz = divisors[mn].size();
+
+        for(int i=sz-1;i>=0;i--)
+        {
+            if(mx%divisors[mn][i]==0)
+            {
+                ++score;
+            }
+        }
+    }
+    printf("%lld\n",score);
 }
 
 int32_t main()
@@ -116,6 +147,10 @@ int32_t main()
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
 
     //setIO("problemname");
+
+    find_divisors();
+
+    //cout <<"h" << endl;
 
     int t; cin>>t;
 

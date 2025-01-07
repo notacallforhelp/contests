@@ -87,18 +87,6 @@ void find_divisors()
         }
     }
 }
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {
@@ -106,9 +94,31 @@ void dfs(int current_node) {
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+ll ceil2(ll a, ll b) {
+    if (a == 0) return 0;
+    return (a - 1)/b + 1;
+}
+
 void solve()
 {
-    
+    int w,h,n; cin>>w>>h>>n;
+
+    int temp = min(w,h);
+    h = max(w,h);
+    w = temp;
+    int output = 0;
+
+    if(n==h*w)
+    {
+        cout << 0 << endl;
+        return;
+    }
+
+    int whole = n/h;
+
+    int total_req = ceil2(n,h);
+
+    if(total_req>)
 }
 
 int32_t main()

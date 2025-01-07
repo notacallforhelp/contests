@@ -26,7 +26,30 @@ struct range
     }
 };
 
-/*
+/*binary search template
+
+while(hi-low>0)
+    {
+        ll mid = (low+hi)/2;
+        ll products = 0;
+        for(int i=0;i<n;i++)
+        {
+            products += min(mid/A[i],(ll)1e9);
+        }
+        if(products>=k)
+        {
+            if(mid<answer)
+            {
+                answer = mid;
+            }
+            hi = mid;
+        }
+        else
+        {
+            low = mid+1;
+        }
+    }
+
 FOR SIMULATING ALL CELLS THAT SHARE A WALL WITH CURRENT CELL, GRID IS OF SIZE N*M
 
 int dx[]={-1,0,+1,0};
@@ -35,9 +58,6 @@ int dy[]={0,-1,0,+1};
 inline bool in(int i,int j){
     return (0<=i&&i<n&&0<=j&&j<m);
 }
-
-
-binary exp 
 
 ll binpow(ll a,ll b)
 {
@@ -52,15 +72,12 @@ ll binpow(ll a,ll b)
     return binpow((a*a)%mod,b/2);
 }
 
-ceil 
-
 ll ceil2(ll a, ll b) {
     if (a == 0) return 0;
     return (a - 1)/b + 1;
 }
 
 COMBINATORICS TEMPLATE 
-
 const int N = 2e5 + 5, mod = 1e9 + 7;
 int64_t fact[N];
 int64_t pw(int64_t a, int64_t b) {
@@ -76,29 +93,6 @@ int64_t C(int64_t n, int64_t k) {
 	if(n < k) return 0LL;
 	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
 }
-
-void find_divisors()
-{
-    for(int i=1;i<=N;i++)
-    {
-        for(int j=i;j<=N;j+=i)
-        {
-            divisors[j].push_back(i);
-        }
-    }
-}
-
-DFS
-
-vector<vector<int>> adj(n);
-vector<bool> visited(n);
-
-void dfs(int current_node) {
-	if (visited[current_node]) { return; }
-	visited[current_node] = true;
-
-	for (int neighbor : adj[current_node]) { dfs(neighbor); }
-}
 */
 
 /*void setIO(string s) {
@@ -108,12 +102,33 @@ void dfs(int current_node) {
 
 void solve()
 {
-    
+    int n,x,y;
+    cin>>n>>x>>y;
+
+    --x;--y;
+
+    vector<int> ans(n);
+
+    for(int i=0;i<n;i++)
+    {
+        ans[(x+i)%n]=(i%2);
+    }
+
+    if(n%2||(x-y)%2==0)
+    {
+        ans[x]=2;
+    }
+
+    for(auto ele:ans)
+    {
+        cout << ele << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()
 {
-    ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+    //ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
 
     //setIO("problemname");
 
