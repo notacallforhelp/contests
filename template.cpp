@@ -99,6 +99,23 @@ void dfs(int current_node) {
 
 	for (int neighbor : adj[current_node]) { dfs(neighbor); }
 }
+
+SIEVE
+
+void sieve(int n,vector<bool> &prime)
+{
+    for(int i=2;i*i<=n;i++)
+    {
+        if(prime[i]==true)
+        {
+            for(int p=i*i;p<=n;p+=i)
+            {
+                prime[p]=false;
+            }
+        }
+    }
+}
+prime[0]=prime[1]=false;
 */
 
 /*void setIO(string s) {
