@@ -127,6 +127,7 @@ prime[0]=prime[1]=false;
 void solve()
 {
     int n; cin>>n;
+    vector<int> 
 }
 
 int32_t main()

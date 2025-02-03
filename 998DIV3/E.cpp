@@ -124,26 +124,54 @@ prime[0]=prime[1]=false;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+//const int N = 2e5+10;
+
 void solve()
 {
-    int n; cin>>n;
-    vector<pair<int,int>> val(n+1);
-    vector<vector<int>> graph(n+1);
+    int n,m1,m2; cin>>n>>m1>>m2;
 
-    for(int i=1;i<=n;i++)
-    {
-        int l,r; cin>>l>>r;
-        val[i]={l,r};
-    }
+    set<int> G[n+1];
+    set<int> F[n+1];
 
-    for(int i=0;i<n-1;i++)
+    for(int i=0;i<m1;i++)
     {
         int u,v; cin>>u>>v;
-        graph[u].push_back(v);
-        graph[v].push_back(u);
+        int k = min(u,v);
+        int j = max(u,v);
+        F[k].insert(j);
+        //F[j].insert(k);
     }
 
-    
+    for(int i=0;i<m2;i++)
+    {
+        int u,v; cin>>u>>v;
+        int k = min(u,v);
+        int j = max(u,v);
+        G[k].insert(j);
+        //G[j].insert(k);
+    }
+    int output = 0;
+    for(int i=1;i<=n;i++)
+    {
+        int absent = 0;
+        int present = 0;
+        //int del = 0;
+        for(auto &ele:G[i])
+        {
+            if(F[i].count(ele)==0)
+            {
+                ++absent;
+            }
+            else
+            {
+                ++present;
+            }
+        }
+        
+        output += (absent+F[i].size()-present);
+    }
+
+    cout << output << endl;
 }
 
 int32_t main()

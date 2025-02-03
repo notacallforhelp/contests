@@ -126,24 +126,56 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    int n; cin>>n;
-    vector<pair<int,int>> val(n+1);
-    vector<vector<int>> graph(n+1);
+    int a,b,c,d; cin>>a>>b>>c>>d;
 
-    for(int i=1;i<=n;i++)
+    vector<int> A(5);
+
+    int output = 0;
+
+    int k= a+b;
+    A[0]=a;
+    A[1]=b;
+    A[3]=c;
+    A[4]=d;
+
+    A[2]=k;
+
+    int local = 0;
+    for(int i=2;i<5;i++)
     {
-        int l,r; cin>>l>>r;
-        val[i]={l,r};
+        if(A[i]==A[i-1]+A[i-2])
+        {
+            ++local;
+        }
     }
+    output = max(output,local);
 
-    for(int i=0;i<n-1;i++)
+    A[2]=c-b;
+
+    local = 0;
+    for(int i=2;i<5;i++)
     {
-        int u,v; cin>>u>>v;
-        graph[u].push_back(v);
-        graph[v].push_back(u);
+        if(A[i]==A[i-1]+A[i-2])
+        {
+            ++local;
+        }
     }
+    output = max(output,local);
 
-    
+
+    A[2]=d-c;
+
+    local = 0;
+    for(int i=2;i<5;i++)
+    {
+        if(A[i]==A[i-1]+A[i-2])
+        {
+            ++local;
+        }
+    }
+    output = max(output,local);
+
+    cout << output << endl;
 }
 
 int32_t main()

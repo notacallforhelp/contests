@@ -127,23 +127,34 @@ prime[0]=prime[1]=false;
 void solve()
 {
     int n; cin>>n;
-    vector<pair<int,int>> val(n+1);
-    vector<vector<int>> graph(n+1);
-
-    for(int i=1;i<=n;i++)
-    {
-        int l,r; cin>>l>>r;
-        val[i]={l,r};
-    }
+    vector<int> A(n); for(auto &i:A)cin>>i;
 
     for(int i=0;i<n-1;i++)
     {
-        int u,v; cin>>u>>v;
-        graph[u].push_back(v);
-        graph[v].push_back(u);
+        int x=A[i];
+        int y = A[i+1];
+        A[i] -= min(x,y);
+        A[i+1] -= min(x,y);
     }
 
-    
+    /*for(auto &ele:A)
+    {
+        cout << ele << " ";
+    }
+    cout << endl;*/
+    vector<int> B = A;
+    sort(B.begin(),B.end());
+
+    for(int i=0;i<n;i++)
+    {
+        if(A[i]!=B[i])
+        {
+            cout << "NO\n";
+            return;
+        }
+    }
+
+    cout << "YES\n";
 }
 
 int32_t main()

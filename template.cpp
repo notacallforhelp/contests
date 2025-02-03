@@ -100,6 +100,27 @@ void dfs(int current_node) {
 	for (int neighbor : adj[current_node]) { dfs(neighbor); }
 }
 
+BFS
+
+for (int i = 0; i < n; i++) {
+		// iterate over all connected components in the graph
+		if (!visited[i]) {
+			queue<int> q;
+			q.push(i);
+			visited[i] = true;
+			while (!q.empty()) {
+				int current_node = q.front();
+				q.pop();
+				for (int neighbor : adj[current_node]) {
+					if (!visited[neighbor]) {
+						visited[neighbor] = true;
+						q.push(neighbor);
+					}
+				}
+			}
+		}
+	}
+
 SIEVE
 
 void sieve(int n,vector<bool> &prime)
@@ -116,6 +137,7 @@ void sieve(int n,vector<bool> &prime)
     }
 }
 prime[0]=prime[1]=false;
+
 */
 
 /*void setIO(string s) {

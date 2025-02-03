@@ -124,26 +124,63 @@ prime[0]=prime[1]=false;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int N = 2e5+10;
+vector<int> F[N];
+vector<int> G[N];
+bool vis[N];
+bool vis2[N];
+vector<set<int>> connected_components;
+
+void dfs(int vertex)
+{
+    //entered vertex
+    vis[vertex]=true;
+    current_components.push_back(vertex);
+
+    for(int child:graph[vertex])
+    {
+        //abt to enter child
+        if(vis[child]) continue;
+        dfs(child);
+
+        //abt to exit child
+    }
+
+    //abt to exit vertex
+}
+
 void solve()
 {
-    int n; cin>>n;
-    vector<pair<int,int>> val(n+1);
-    vector<vector<int>> graph(n+1);
+    int n,m1,m2; cin>>n>>m1>>m2;
+
+    for(int i=0;i<m1;i++)
+    {
+        int v1,v2;
+        cin>>v1>>v2;
+        --v1;
+        --v2;
+        F[v1].push_back(v2);
+        F[v2].push_back(v1);
+    }
+
+    for(int i=0;i<m2;i++)
+    {
+        int v1,v2;
+        cin>>v1>>v2;
+        --v1;
+        --v2;
+        G[v1].push_back(v2);
+        G[v2].push_back(v1);
+    }
 
     for(int i=1;i<=n;i++)
     {
-        int l,r; cin>>l>>r;
-        val[i]={l,r};
+        if(vis[i]) continue;
+        current_components.clear();
+        dfs(i);
+        ct++;
+        connected_components.push_back(current_components);
     }
-
-    for(int i=0;i<n-1;i++)
-    {
-        int u,v; cin>>u>>v;
-        graph[u].push_back(v);
-        graph[v].push_back(u);
-    }
-
-    
 }
 
 int32_t main()

@@ -155,6 +155,10 @@ void solve()
                     output *= k;
                     output %= mod;
                 }
+                else
+                {
+                    
+                }
             }
         }
         else
