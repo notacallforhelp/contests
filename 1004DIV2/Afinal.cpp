@@ -147,40 +147,20 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    int n, k; cin>>n>>k;
-    vector<int> A(n); for(auto &i:A)cin>>i;
+    int x,y; cin>>x>>y;
 
-    if(k==n)
+    if(x+1==y)
     {
-        int j = 1;
-        for(int i=1;i<n;i=i+2)
-        {
-            if(A[i]!=j)
-            {
-                break;
-            }
-            ++j;
-        }
-        cout << j << endl;
-        return;
+        cout << "YES\n";
     }
-
-    vector<int> output;
-
-    int end = n-(k-2);
-
-    //int cnt = 0;
-
-    for(int i=1;i<end;i++)
+    else if((x-y+1>=0)&&((x-y+1)%9)==0)
     {
-        if(A[i]!=1)
-        {
-            cout << 1 << endl;
-            return;
-        }
+        cout << "YES\n";
     }
-    
-    cout << 2 << endl;
+    else
+    {
+        cout << "NO\n";
+    }
 }
 
 int32_t main()

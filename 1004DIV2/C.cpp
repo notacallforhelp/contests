@@ -145,42 +145,43 @@ prime[0]=prime[1]=false;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+map<int,int> M;
+
 void solve()
 {
-    int n, k; cin>>n>>k;
-    vector<int> A(n); for(auto &i:A)cin>>i;
+    int n; cin>>n;
 
-    if(k==n)
+    string k = to_string(n);
+
+    for(auto &c:k)
     {
-        int j = 1;
-        for(int i=1;i<n;i=i+2)
+        if(c=='7')
         {
-            if(A[i]!=j)
-            {
-                break;
-            }
-            ++j;
-        }
-        cout << j << endl;
-        return;
-    }
-
-    vector<int> output;
-
-    int end = n-(k-2);
-
-    //int cnt = 0;
-
-    for(int i=1;i<end;i++)
-    {
-        if(A[i]!=1)
-        {
-            cout << 1 << endl;
+            cout << 0 << endl;
             return;
         }
     }
-    
-    cout << 2 << endl;
+
+    int output = 30;
+
+    for(int k=1;k<=9;k++)
+    {
+        int num = n-k;
+        string m = to_string(num);
+
+        for(auto &ele:m)
+        {
+            int h = ele-'0';
+            int req = (17-h)%10;
+            //cout << req << endl;
+            if(req<=k)
+            {
+                output = min(output,k);
+            }
+        }
+    }
+
+    cout << output << endl;
 }
 
 int32_t main()

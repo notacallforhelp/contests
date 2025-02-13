@@ -147,40 +147,56 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    int n, k; cin>>n>>k;
+    int n; cin>>n;
     vector<int> A(n); for(auto &i:A)cin>>i;
+    map<int,int> M;
 
-    if(k==n)
+    int mx = *max_element(A.begin(),A.end());
+    int mn = *min_element(A.begin(),A.end());
+
+    for(int i=0;i<n;i++)
     {
-        int j = 1;
-        for(int i=1;i<n;i=i+2)
+        M[A[i]]++;
+    }
+    bool even = true;
+
+    for(auto &ele:M)
+    {
+        if(ele.second%2!=0)
         {
-            if(A[i]!=j)
-            {
-                break;
-            }
-            ++j;
+            even = false;
         }
-        cout << j << endl;
+    }
+    if(even)
+    {
+        cout << "YES\n";
         return;
     }
-
-    vector<int> output;
-
-    int end = n-(k-2);
-
-    //int cnt = 0;
-
-    for(int i=1;i<end;i++)
+    vector<pair<int,int>> prs;
+    for(int i=mn;i<=mx;i++)
     {
-        if(A[i]!=1)
+        prs.push_back({i,M[i]});
+    }
+
+    int carryforward = 0;
+    for(int i=0;i<prs.size();i++)
+    {
+        int j = prs[i].second + carryforward;
+        prs[i].second = min(2ll,j);
+        //for next iteration
+        carryforward = max(0ll,j-2);
+    }
+
+    for(int i=0;i<prs.size();i++)
+    {
+        if(prs[i].second%2!=0)
         {
-            cout << 1 << endl;
+            cout << "NO\n";
             return;
         }
     }
-    
-    cout << 2 << endl;
+
+    cout << "YES\n";
 }
 
 int32_t main()

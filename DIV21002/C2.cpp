@@ -147,40 +147,37 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    int n, k; cin>>n>>k;
-    vector<int> A(n); for(auto &i:A)cin>>i;
+    int n; cin>>n;
+    vector<vector<int>> grid(n+1,vector<int> (n+1,0));
 
-    if(k==n)
+    for(int i=1;i<=n;i++)
     {
-        int j = 1;
-        for(int i=1;i<n;i=i+2)
+        for(int j=1;j<=n;j++)
         {
-            if(A[i]!=j)
-            {
-                break;
-            }
-            ++j;
-        }
-        cout << j << endl;
-        return;
-    }
-
-    vector<int> output;
-
-    int end = n-(k-2);
-
-    //int cnt = 0;
-
-    for(int i=1;i<end;i++)
-    {
-        if(A[i]!=1)
-        {
-            cout << 1 << endl;
-            return;
+            cin>> grid[i][j];
         }
     }
-    
-    cout << 2 << endl;
+
+    int ans = 0;
+    vector<int> gamer;
+
+    for(int i=1;i<=n;i++)
+    {
+        int ct = 0;
+        for(int j=n;j>=1&&grid[i][j]==1;j--)
+        {
+            ++ct;
+        }
+        gamer.push_back(ct);
+    }
+
+    sort(gamer.begin(),gamer.end());
+    for(auto &i:gamer)
+    {
+        ans += (i>=ans);
+    }
+
+    cout << ans << endl;
 }
 
 int32_t main()

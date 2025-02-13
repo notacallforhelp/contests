@@ -147,40 +147,26 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    int n, k; cin>>n>>k;
-    vector<int> A(n); for(auto &i:A)cin>>i;
+    int n; cin>>n;
 
-    if(k==n)
+    for(int powers=0;powers<=9;powers++)
     {
-        int j = 1;
-        for(int i=1;i<n;i=i+2)
+        string m = to_string(n-powers);
+        int md = 0;
+
+        for(auto &ele:m)
         {
-            if(A[i]!=j)
+            if(ele<='7')
             {
-                break;
+                md = max(md,1ll*(ele-'0'));
             }
-            ++j;
         }
-        cout << j << endl;
-        return;
-    }
-
-    vector<int> output;
-
-    int end = n-(k-2);
-
-    //int cnt = 0;
-
-    for(int i=1;i<end;i++)
-    {
-        if(A[i]!=1)
+        if(7-md<=powers)
         {
-            cout << 1 << endl;
+            cout << powers << endl;
             return;
         }
     }
-    
-    cout << 2 << endl;
 }
 
 int32_t main()

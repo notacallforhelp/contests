@@ -145,42 +145,24 @@ prime[0]=prime[1]=false;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+int sum(int a)
+{
+    int k = 0;
+
+    while(a!=0)
+    {
+        k+= a%10;
+        a/=10;
+    }
+    return k;
+}
+
 void solve()
 {
-    int n, k; cin>>n>>k;
-    vector<int> A(n); for(auto &i:A)cin>>i;
-
-    if(k==n)
+    for(int i=1;i<=10000;i++)
     {
-        int j = 1;
-        for(int i=1;i<n;i=i+2)
-        {
-            if(A[i]!=j)
-            {
-                break;
-            }
-            ++j;
-        }
-        cout << j << endl;
-        return;
+        cout << sum(i) << " " << sum(i+1) << endl;
     }
-
-    vector<int> output;
-
-    int end = n-(k-2);
-
-    //int cnt = 0;
-
-    for(int i=1;i<end;i++)
-    {
-        if(A[i]!=1)
-        {
-            cout << 1 << endl;
-            return;
-        }
-    }
-    
-    cout << 2 << endl;
 }
 
 int32_t main()

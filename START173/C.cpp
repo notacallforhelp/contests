@@ -147,40 +147,77 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    int n, k; cin>>n>>k;
+    int n,m; cin>>n>>m;
     vector<int> A(n); for(auto &i:A)cin>>i;
+    vector<int> B(m); for(auto &i:B)cin>>i;
 
-    if(k==n)
+    int mn = *min_element(B.begin(),B.end());
+    int idx = find(B.begin(),B.end(),mn)-B.begin();
+
+
+    vector<int> C(m);
+
+    for(int i=0;i<m;i++)
     {
-        int j = 1;
-        for(int i=1;i<n;i=i+2)
+        C[i]=B[(idx)%m];
+        ++idx;
+    }
+
+    int p = 0;
+
+    while(p<(n-m))
+    {
+        if(C[0]<A[p])
         {
-            if(A[i]!=j)
+            for(int k=0;k<m;k++)
             {
+                A[p]=C[k];
+                ++p;
+            }
+        }
+        ++p;
+    }
+
+    if(p==(m-n)&&C[0]<=A[n-m])
+    {
+        vector<int> compare1;
+        for(int i=(n-m);i<n;i++)
+        {
+            compare1.push_back(A[n-m]);
+        }
+        bool cwins = true;
+
+        for(int i=0;i<m;i++)
+        {
+            if(compare1[i]<C[i])
+            {
+                cwins = false;
                 break;
             }
-            ++j;
+            if(C[i]<compare1[i])
+            {
+                cwins=true;
+                break;
+            }
         }
-        cout << j << endl;
-        return;
-    }
 
-    vector<int> output;
-
-    int end = n-(k-2);
-
-    //int cnt = 0;
-
-    for(int i=1;i<end;i++)
-    {
-        if(A[i]!=1)
+        if(cwins)
         {
-            cout << 1 << endl;
-            return;
+            int k = 0;
+            for(int i=(n-m);i<n;i++)
+            {
+                A[i]=C[k];
+                ++k;
+            }
         }
     }
-    
-    cout << 2 << endl;
+
+
+    for(int i=0;i<n;i++)
+    {
+        cout << A[i] << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()

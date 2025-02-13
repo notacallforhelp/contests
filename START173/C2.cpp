@@ -147,40 +147,94 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    int n, k; cin>>n>>k;
+    int n,m; cin>>n>>m;
     vector<int> A(n); for(auto &i:A)cin>>i;
+    vector<int> B(m); for(auto &i:B)cin>>i;
 
-    if(k==n)
+    if(m==1)
     {
-        int j = 1;
-        for(int i=1;i<n;i=i+2)
+        for(int i=0;i<n;i++)
         {
-            if(A[i]!=j)
-            {
-                break;
-            }
-            ++j;
+            cout << min(A[i],B[0]) << " ";
         }
-        cout << j << endl;
+        cout << endl;
         return;
     }
 
-    vector<int> output;
+    int mn = *min_element(B.begin(),B.end());
+    int idx = find(B.begin(),B.end(),mn)-B.begin();
 
-    int end = n-(k-2);
+    vector<int> C(m);
 
-    //int cnt = 0;
-
-    for(int i=1;i<end;i++)
+    for(int i=0;i<m;i++)
     {
-        if(A[i]!=1)
+        C[i]=B[(idx)%m];
+        ++idx;
+    }
+
+    int ptr = -1;
+    for(int i=0;i<(n-m);i++)
+    {
+        if(C[0]<A[i])
         {
-            cout << 1 << endl;
-            return;
+            ptr=i;
+            break;
         }
     }
+
+    if(ptr!=-1)
+    {
+        for(int i=ptr;i<=(n-m);i++)
+        {
+            A[i]=C[0];
+        }
+
+        int k = 1;
+        for(int i=(n-m+1);i<n;i++)
+        {
+            A[i]=C[k];
+            ++k;
+        }
+    }
+    else
+    {
+        vector<int> compare;
+        for(int i=n-m;i<n;i++)
+        {
+            compare.push_back(A[i]);
+        }
+        bool cwins = true;
+
+        for(int i=0;i<m;i++)
+        {
+            if(compare[i]<C[i])
+            {
+                cwins = false;
+                break;
+            }
+            else if(C[i]<compare[i])
+            {
+                cwins = true;
+                break;
+            }
+        }
+        if(cwins)
+        {
+            int k = 0;
+            for(int i=(n-m);i<n;i++)
+            {
+                A[i]=C[k];
+                ++k;
+            }
+        }
+    }
+
+    for(int i=0;i<n;i++)
+    {
+        cout << A[i] << " ";
+    }
+    cout << endl;
     
-    cout << 2 << endl;
 }
 
 int32_t main()
