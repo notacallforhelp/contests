@@ -150,46 +150,39 @@ void solve()
     int n; cin>>n;
     vector<int> A(n); for(auto &i:A)cin>>i;
 
-    int output = 0;
+    int output = *max_element(A.begin(),A.end());
+
+    bool haseven = false;
+    bool hasodd = false;
 
     for(int i=0;i<n;i++)
     {
-        for(int j=i+1;j<n;j++)
+        if(A[i]%2==0)
         {
-            int mn = min(A[i],A[j]);
-            int mx = max(A[i],A[j]);
-
-            int low = 0;
-            int high = 1e17;
-
-            int d = 0;
-            /*(if((mx)%(mn)==0)
-            {
-                output = max(output,mn);
-            }*/
-
-            while(low<=high)
-            {
-                int mid = low + (high-low)/2;
-                if(mn+mid<=(mx+mid)/2)
-                {
-                    /*if((mx+mid)%(mn+mid)==0)
-                    {
-                        output = max(output,mid+mn);
-                    }*/
-                    d = max(d,mid);
-                    low = mid+1;
-                }
-                else
-                {
-                    high=mid-1;
-                }
-            }
-            int diff = mx+d-(mn+d);
-            output = max(output,diff);
+            haseven = true;
+        }
+        else
+        {
+            hasodd = true;
         }
     }
-    cout << output << endl;
+
+    if(!haseven||!hasodd)
+    {
+        cout << output << endl;
+        return;
+    }
+
+    int oddct = 0; int sum = 0;
+
+    for(auto &ele:A)
+    {
+        if(ele%2!=0) ++oddct;
+        sum += ele;
+    }
+
+    cout << sum - oddct +1 << endl;
+
 }
 
 int32_t main()

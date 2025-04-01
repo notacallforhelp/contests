@@ -148,48 +148,70 @@ prime[0]=prime[1]=false;
 void solve()
 {
     int n; cin>>n;
-    vector<int> A(n); for(auto &i:A)cin>>i;
+    string s; cin>>s;
+    set<char> st;
 
-    int output = 0;
-
-    for(int i=0;i<n;i++)
+    for(auto &ele:s)
     {
-        for(int j=i+1;j<n;j++)
+        st.insert(ele);
+    }
+    if(st.size()==1)
+    {
+        cout << -1 << endl;
+        return;
+    }
+
+    int shift = 0;
+
+    int lgidx = -1;
+    int lastgp=1;
+
+    for(int i=n-2;i>=0;i--)
+    {
+        if(s[i]!=s[i+1])
         {
-            int mn = min(A[i],A[j]);
-            int mx = max(A[i],A[j]);
-
-            int low = 0;
-            int high = 1e17;
-
-            int d = 0;
-            /*(if((mx)%(mn)==0)
-            {
-                output = max(output,mn);
-            }*/
-
-            while(low<=high)
-            {
-                int mid = low + (high-low)/2;
-                if(mn+mid<=(mx+mid)/2)
-                {
-                    /*if((mx+mid)%(mn+mid)==0)
-                    {
-                        output = max(output,mid+mn);
-                    }*/
-                    d = max(d,mid);
-                    low = mid+1;
-                }
-                else
-                {
-                    high=mid-1;
-                }
-            }
-            int diff = mx+d-(mn+d);
-            output = max(output,diff);
+            lgidx = i;
+            break;
+        }
+        else
+        {
+            ++lastgp;
         }
     }
-    cout << output << endl;
+
+    int gp = 1; vector<int> ans;
+
+    for(int i=0;i<=lgidx;i++)
+    {
+        if(s[i]==s[i+1])
+        {
+            ++gp;
+        }
+        else
+        {
+            for(int j=0;j<gp*2;j++)
+            {
+                ans.push_back(i+shift);
+            }
+            shift += gp*2;
+            gp=1;
+        }
+    }
+
+    int gaming = lgidx + shift;
+
+    for(int i=0;i<lastgp*2;i++)
+    {
+        ans.push_back(gaming);
+        ++gaming;
+    }
+
+    cout << ans.size() << endl;
+    for(auto &ele:ans)
+    {
+        cout << ele+1 << endl;
+    }
+
 }
 
 int32_t main()
