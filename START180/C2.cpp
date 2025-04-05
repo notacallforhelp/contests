@@ -75,13 +75,6 @@ int64_t pw(int64_t a, int64_t b) {
 int64_t C(int64_t n, int64_t k) {
 	if(n < k) return 0LL;
 	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
-    // return (fact[n]*ifact[n-k]*ifact[k])%mod;
-}
-
-ifact[N-1] = pw(fact[N-1],mod-2);
-for(int i=N-2;i>=0;i--)
-{
-    ifact[i]=1ll*ifact[i+1]*(i+1)%mod;
 }
 
 void find_divisors()
@@ -154,7 +147,44 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    
+    int n; cin>>n;
+    vector<int> A(n); for(auto &i:A)cin>>i;
+
+    if(n==1)
+    {
+        cout << A[0] << endl;
+        return;
+    }
+
+    int mx = *max_element(A.begin(),A.end());
+
+    vector<int> idx;
+
+    for(int i=0;i<n;i++)
+    {
+        if(A[i]==mx)
+        {
+            idx.push_back(i);
+        }
+    }
+
+    bool yes = false;
+
+    for(auto &ele:idx)
+    {
+        if(ele%2==0)
+        {
+            yes=true; break;
+        }
+    }
+    if(yes)
+    {
+        cout << mx + (n-1)/2 << endl;
+    }
+    else
+    {
+        cout << mx + (n-3)/2 << endl;
+    }
 }
 
 int32_t main()

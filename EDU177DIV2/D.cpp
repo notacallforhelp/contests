@@ -150,8 +150,9 @@ ll ceil2(ll a, ll b) {
     return (a - 1)/b + 1;
 }
 
-const int N = 3e6 + 5, mod = 998244353;
+const int N = 5e5 + 5, mod = 998244353;
 int64_t fact[N];
+int64_t ifact[N];
 int64_t pw(int64_t a, int64_t b) {
 	int64_t r = 1;
 	while(b > 0) {
@@ -160,10 +161,6 @@ int64_t pw(int64_t a, int64_t b) {
 		a = (a * a) % mod; 
 	}
 	return r;
-}
-int64_t Comb(int64_t n, int64_t k) {
-	if(n < k) return 0LL;
-	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
 }
 
 void solve()
@@ -195,7 +192,7 @@ void solve()
     int output = dp[n/2]*fact[n/2]%mod*fact[(n+1)/2]%mod;
     for(int i=0;i<26;i++)
     {
-        output = (output*pw(fact[C[i]],mod-2))%mod;
+        output = (output*ifact[C[i]])%mod;
     }
     cout << output << endl;
 }
@@ -209,6 +206,11 @@ int32_t main()
     for(int i=1;i<=N-1;i++)
     {
         fact[i]=(fact[i-1]*i)%mod;
+    }
+    ifact[N-1] = pw(fact[N-1],mod-2);
+    for(int i=N-2;i>=0;i--)
+    {
+        ifact[i]=1ll*ifact[i+1]*(i+1)%mod;
     }
 
     int t; cin>>t;

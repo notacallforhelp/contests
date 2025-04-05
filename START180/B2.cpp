@@ -75,13 +75,6 @@ int64_t pw(int64_t a, int64_t b) {
 int64_t C(int64_t n, int64_t k) {
 	if(n < k) return 0LL;
 	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
-    // return (fact[n]*ifact[n-k]*ifact[k])%mod;
-}
-
-ifact[N-1] = pw(fact[N-1],mod-2);
-for(int i=N-2;i>=0;i--)
-{
-    ifact[i]=1ll*ifact[i+1]*(i+1)%mod;
 }
 
 void find_divisors()
@@ -152,9 +145,69 @@ prime[0]=prime[1]=false;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int mod = 998244353;
+
 void solve()
 {
-    
+    int n; cin>>n;
+
+    int mx = 0, mn = 0, curr = 1;
+    int powerval = 0;
+    int plus = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        if(i==0)
+        {
+            powerval = 1;
+        }
+        else
+        {
+            powerval = (powerval*2)%mod;
+        }
+        if(i%4==0)
+        {
+            plus = (powerval+plus)%mod;
+            if(i==n-1)
+            {
+                break;
+            }
+            ++i;
+            powerval = (powerval*2)%mod;
+            plus = (powerval+plus)%mod;
+        }
+    }
+
+    int minus = 0;
+    powerval = 0;
+    int hit = 2;
+    for(int i=0;i<n;i++)
+    {
+        if(i==0)
+        {
+            powerval = 1;
+        }
+        else
+        {
+            powerval = (powerval*2)%mod;
+        }
+        if(i==hit)
+        {
+            minus=(powerval+minus)%mod;
+            if(i==n-1)
+            {
+                break;
+            }
+            ++i;
+            powerval = (powerval*2)%mod;
+            minus = (powerval+minus)%mod;
+            hit +=4;
+        }
+    }
+    cout << plus << " " << minus << endl;
+
+    int output = (plus%mod-(minus%mod)+mod)%mod;
+    cout << output << endl;
 }
 
 int32_t main()

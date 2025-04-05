@@ -75,13 +75,6 @@ int64_t pw(int64_t a, int64_t b) {
 int64_t C(int64_t n, int64_t k) {
 	if(n < k) return 0LL;
 	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
-    // return (fact[n]*ifact[n-k]*ifact[k])%mod;
-}
-
-ifact[N-1] = pw(fact[N-1],mod-2);
-for(int i=N-2;i>=0;i--)
-{
-    ifact[i]=1ll*ifact[i+1]*(i+1)%mod;
 }
 
 void find_divisors()
@@ -152,9 +145,48 @@ prime[0]=prime[1]=false;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int mod = 998244353;
+
 void solve()
 {
-    
+    int n; cin>>n;
+
+    int turn = 0;
+    bool up = 1;
+    int mx = 0; int mn = 0; int curr = 0;
+
+    while(turn<n)
+    {
+        if(up)
+        {
+            curr = ((1ll<<turn)+curr+mod)%mod;
+            mx = max(mx,curr); mn = min(mn,curr);
+            ++turn;
+            if(turn>=n)
+            {
+                break;
+            }
+            curr = ((1ll<<turn)+curr)%mod;
+            mx = max(mx,curr); mn = min(mn,curr);
+            ++turn;
+            up = up^1;
+        }
+        else
+        {
+            curr = (curr-(1ll<<turn)+mod)%mod;
+            mx = max(mx,curr); mn = min(mn,curr);
+            ++turn;
+            if(turn>=n)
+            {
+                break;
+            }
+            curr = (curr-(1ll<<turn)+mod)%mod;
+            mx = max(mx,curr); mn = min(mn,curr);
+            ++turn;
+            up = up^1;
+        }
+    }
+    cout << (mx-mn)%mod << endl;
 }
 
 int32_t main()
