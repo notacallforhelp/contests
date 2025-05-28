@@ -132,7 +132,7 @@ SIEVE
 
 void sieve(int n,vector<bool> &prime)
 {
-    for(int i=2;i<=n;i++)
+    for(int i=2;i*i<=n;i++)
     {
         if(prime[i]==true)
         {
@@ -154,7 +154,28 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    
+    int n; cin>>n;
+    vector<int> P(n+1);
+    for(int i=1;i<=n;i++)
+    {
+        cin>>P[i];
+    }
+    bool tr = true;
+    for(int i=1;i<=n;i++)
+    {
+        if(i==P[i])
+        {
+            tr=false;
+        }
+    }
+    if(tr)
+    {
+        cout << 0 << endl;
+    }
+    else
+    {
+        cout << 1 << endl;
+    }
 }
 
 int32_t main()

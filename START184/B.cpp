@@ -132,7 +132,7 @@ SIEVE
 
 void sieve(int n,vector<bool> &prime)
 {
-    for(int i=2;i<=n;i++)
+    for(int i=2;i*i<=n;i++)
     {
         if(prime[i]==true)
         {
@@ -152,9 +152,32 @@ prime[0]=prime[1]=false;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int mod = 998244353;
+
 void solve()
 {
-    
+    int n; cin>>n;
+    vector<int> A(n); for(auto &i:A)cin>>i;
+    vector<int> dp(n,0);
+    for(int i=0;i<n;i++)
+    {
+        int left = i-0;
+        int right = n-1-i;
+        if(A[i]!=left&&A[i]!=right)
+        {
+            cout << 0 << endl; return;
+        }
+        if(A[i]==left&&A[i]==right)
+        {
+            dp[i]=dp[i-1];
+        }
+        if(A[i]==left&&A[i]!=right||A[i]==right&&A[i]!=left)
+        {
+           dp[i]=dp[i-1]+1;
+           dp[i] %= mod;
+        }
+    }
+    cout << dp[n-1] << endl;
 }
 
 int32_t main()

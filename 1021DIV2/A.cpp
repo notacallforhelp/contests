@@ -132,7 +132,7 @@ SIEVE
 
 void sieve(int n,vector<bool> &prime)
 {
-    for(int i=2;i<=n;i++)
+    for(int i=2;i*i<=n;i++)
     {
         if(prime[i]==true)
         {

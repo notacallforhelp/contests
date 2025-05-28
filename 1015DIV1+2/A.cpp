@@ -132,7 +132,7 @@ SIEVE
 
 void sieve(int n,vector<bool> &prime)
 {
-    for(int i=2;i<=n;i++)
+    for(int i=2;i*i<=n;i++)
     {
         if(prime[i]==true)
         {
@@ -154,7 +154,18 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    
+    int n; cin>>n;
+    if(n%2==0)
+    {
+        cout << -1 << endl; return;
+    }
+
+    cout << n << " ";
+    for(int i=1;i<=n-1;i++)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()

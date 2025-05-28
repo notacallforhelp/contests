@@ -132,7 +132,7 @@ SIEVE
 
 void sieve(int n,vector<bool> &prime)
 {
-    for(int i=2;i<=n;i++)
+    for(int i=2;i*i<=n;i++)
     {
         if(prime[i]==true)
         {
@@ -154,7 +154,66 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
-    
+    int n; cin>>n;
+    vector<int> A(n); for(auto &i:A)cin>>i;
+    sort(A.begin(),A.end());
+    int mn = A[0];
+    int ct = 0;
+    for(int i=0;i<n;i++)
+    {
+        if(A[i]==mn) ++ct;
+    }
+    if(ct>1)
+    {
+        cout << "Yes" << endl;
+        return;
+    }
+    vector<int> pos;
+    for(int i=1;i<n;i++)
+    {
+        if(A[i]%mn==0)
+        {
+            pos.push_back(A[i]);
+        }
+    }
+    int sz = pos.size();
+    if(sz==0)
+    {
+        cout << "No" << endl;
+        return;
+    }
+    int g = pos[0];
+    if(mn==g)
+    {
+        cout << "Yes" << endl;
+        return;
+    }
+
+    for(int i=1;i<sz;i++)
+    {
+        g = __gcd(g,pos[i]);
+        if(g==mn||__gcd(pos[i],pos[i-1])==mn)
+        {
+            cout << "Yes" << endl;
+            return;
+        }
+    }
+    int l = pos[sz-1];
+    if(l==mn)
+    {
+        cout << "Yes" << endl;
+        return;
+    }
+    for(int i=sz-1;i>=0;i--)
+    {
+        l=__gcd(l,pos[i]);
+        if(l==mn)
+        {
+            cout << "Yes" << endl;
+            return;
+        }
+    }
+    cout << "No" << endl;
 }
 
 int32_t main()

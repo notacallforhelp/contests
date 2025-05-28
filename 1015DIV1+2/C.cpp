@@ -132,7 +132,7 @@ SIEVE
 
 void sieve(int n,vector<bool> &prime)
 {
-    for(int i=2;i<=n;i++)
+    for(int i=2;i*i<=n;i++)
     {
         if(prime[i]==true)
         {
@@ -154,6 +154,137 @@ prime[0]=prime[1]=false;
 
 void solve()
 {
+    int n; cin>>n;
+    vector<int> A(n+1); //for(auto &i:A)cin>>i;
+    vector<int> B(n+1); //for(auto &i:B)cin>>i;
+    for(int i=1;i<=n;i++)
+    {
+        cin>>A[i];
+    }
+    for(int i=1;i<=n;i++)
+    {
+        cin>>B[i];
+    }
+    map<int,int> M1,M2;
+    for(int i=1;i<=n;i++)
+    {
+        M1[A[i]]=B[i];
+        M2[B[i]]=A[i];
+    }
+    for(int i=1;i<=n;i++)
+    {
+        if(M1[i]!=M2[i])
+        {
+            cout << -1 << endl;
+            return;
+        }
+    }
+    int ct = 0; int idx = -1;
+    for(int i=1;i<=n;i++)
+    {
+        if(A[i]==B[i])
+        {
+            ++ct;
+            idx = i;
+        }
+    }
+    if(n%2==0)
+    {
+        if(ct>0)
+        {
+            cout << -1 << endl; return;
+        }
+    }
+    else
+    {
+        if(ct>1)
+        {
+            cout << -1 << endl; return;
+        }
+    }
+    vector<int> pos(n+1,-1);//map<int,int> M;
+    vector<int> vis(n+1,0);
+    for(int i=1;i<=n;i++)
+    {
+        pos[A[i]]=i;
+        //M[B[i]]=A[i];
+    }
+    vector<pair<int,int>> output;
+    if(n%2!=0&&ct==1)
+    {
+        int mid = n/2+1; //int tmp = A[idx];
+        vis[A[idx]]=1;
+        if(mid!=idx)
+        {
+            pos[A[mid]]=idx;
+            pos[A[idx]]=mid; 
+            output.push_back({idx,mid}); 
+            swap(A[mid],A[idx]);
+            swap(B[mid],B[idx]); 
+        }
+    }
+
+    /*for(int i=1;i<=n;i++)
+    {
+        cout << A[i] << " ";
+    }
+    cout << endl;
+
+    for(int i=1;i<=n;i++)
+    {
+        cout << B[i] << " ";
+    }
+    cout << endl;
+
+    for(int i=1;i<=n;i++)
+    {
+        cout << pos[A[i]] << " ";
+    }
+    cout << endl;*/
+
+    for(int i=1;i<=n;i++)
+    {
+        if(!vis[A[i]])
+        {
+            vis[B[i]]=1;
+        }
+        else
+        {
+            vis[A[i]]=1;
+            int req = n-pos[B[i]]+1;
+            int currpos = pos[A[i]];
+            if(req!=currpos)
+            {
+                output.push_back({req,currpos});
+                pos[A[req]]=currpos;
+                pos[A[currpos]]=req;
+                swap(A[req],A[currpos]);
+                swap(B[req],B[currpos]);
+                i--; 
+            }
+        }
+    }
+    vector<int> C(n);
+    vector<int> D(n);
+    for(int i=1;i<=n;i++)
+    {
+        C[i-1]=A[i];
+    }
+    for(int i=1;i<=n;i++)
+    {
+        D[i-1]=B[n-i+1];
+    }
+    if(C!=D)
+    {
+        cout << -1 << endl;
+        return;
+    }
+    cout << output.size() << endl;
+    for(auto &ele:output)
+    {
+        cout << ele.first << " " << ele.second << endl;
+    }
+
     
 }
 

@@ -132,7 +132,7 @@ SIEVE
 
 void sieve(int n,vector<bool> &prime)
 {
-    for(int i=2;i<=n;i++)
+    for(int i=2;i*i<=n;i++)
     {
         if(prime[i]==true)
         {
@@ -152,9 +152,42 @@ prime[0]=prime[1]=false;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+int func(int mid,int n)
+{
+    return n*(n-1)/2 - (n-mid)*(n-1-mid)/2;
+}
+
 void solve()
 {
-    
+    int n,m; cin>>n>>m;
+    int totaledge = n*(n-1)/2;
+    int zeroes = totaledge-m;
+    if(zeroes==0)
+    {
+        cout << n-1 << endl;return;
+    }
+    int mn = max(0ll,n-1-zeroes);
+
+    int low =1;
+    int high =  n;
+    int sat = 0;
+    while(low<=high)
+    {
+        int mid = low+(high-low)/2;
+        int val = func(mid,n);
+        if(val<=m)
+        {
+            sat = max(sat,mid);
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
+        }
+    }
+    //cout << sat << " " << mn << endl;
+    int output = sat*(sat+1)/2 - (mn-1)*mn/2;
+    cout << output << endl;
 }
 
 int32_t main()
