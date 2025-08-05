@@ -149,7 +149,6 @@ prime[0]=prime[1]=false;
 DSU
 
 const int N = 2e5+10;
-
 int parent[N];int size[N];
 
 void make(int v)
@@ -176,7 +175,7 @@ void Union(int a,int b)
         size[a] += size[b];
     }
 }
-    
+
 */
 
 /*void setIO(string s) {
