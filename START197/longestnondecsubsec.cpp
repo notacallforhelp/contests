@@ -145,38 +145,6 @@ void sieve(int n,vector<bool> &prime)
 }
 prime[0]=prime[1]=false;
 
-
-DSU
-
-const int N = 2e5+10;
-
-int parent[N];int size[N];
-
-void make(int v)
-{
-    parent[v]=v;
-    size[v]=1;
-}
-
-int find(int v)
-{
-    if(v==parent[v]) return v;
-    //path compression
-    return parent[v] = find(parent[v]);
-}
-
-void Union(int a,int b)
-{
-    a = find(a); b = find(b);
-    if(a!=b)
-    {
-        //union by size
-        if(size[a]<size[b]) swap(a,b); 
-        parent[b]=a;
-        size[a] += size[b];
-    }
-}
-    
 */
 
 /*void setIO(string s) {
@@ -186,7 +154,41 @@ void Union(int a,int b)
 
 void solve()
 {
-    
+    string s; cin>>s;
+    int n = s.length();
+    vector<int> pre(n),post(n);
+
+    for(int i=0;i<n;i++)
+    {
+        if(i!=0)
+        {
+            pre[i]+=pre[i-1];
+        }
+        if(s[i]=='0')
+        {
+            ++pre[i];
+        }
+    }
+
+    for(int i=n-1;i>=0;i--)
+    {
+        if(i!=n-1)
+        {
+            post[i] += post[i+1];
+        }
+        if(s[i]=='1')
+        {
+            ++post[i];
+        }
+    }
+
+    int ans = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        ans = max(ans,pre[i]+post[i]);
+    }
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -195,7 +197,7 @@ int32_t main()
 
     //setIO("problemname");
 
-    int t; cin>>t;
+    int t=1; //cin>>t;
 
     while(t--)
     {

@@ -145,38 +145,6 @@ void sieve(int n,vector<bool> &prime)
 }
 prime[0]=prime[1]=false;
 
-
-DSU
-
-const int N = 2e5+10;
-
-int parent[N];int size[N];
-
-void make(int v)
-{
-    parent[v]=v;
-    size[v]=1;
-}
-
-int find(int v)
-{
-    if(v==parent[v]) return v;
-    //path compression
-    return parent[v] = find(parent[v]);
-}
-
-void Union(int a,int b)
-{
-    a = find(a); b = find(b);
-    if(a!=b)
-    {
-        //union by size
-        if(size[a]<size[b]) swap(a,b); 
-        parent[b]=a;
-        size[a] += size[b];
-    }
-}
-    
 */
 
 /*void setIO(string s) {
@@ -186,7 +154,68 @@ void Union(int a,int b)
 
 void solve()
 {
-    
+    int n,k; cin>>n>>k;
+    string s; cin>>s;
+
+    int output = 1;
+    int low = 1;
+    int high = n/k;
+
+    vector<int> pre(n);
+    vector<int> post(n);   //nondec so 00001111
+
+    for(int i=0;i<n;i++)
+    {
+        if(i>0) pre[i] += pre[i-1];
+        pre[i] += (s[i]=='0');
+    }
+
+    for(int i=n-1;i>=0;i--)
+    {
+        if(i!=n-1) post[i] += post[i+1];
+        post[i] += (s[i]=='1');
+    }
+
+    auto check = [&](int mid)
+    {
+        int completed;
+        int lcl = 0;
+        for(int i=0;i<n;i++)
+        {
+            lcl = max(lcl,pre[i]+post[i]);
+            if(lcl>=mid)
+            {
+                ++completed;
+                lcl=0;
+
+                if(completed>=k)
+                {
+                    return true;
+                }
+            }
+        }
+
+        if(completed>=k)
+        {
+            return true;
+        }
+        return false;
+    };
+
+    while(low<=high)
+    {
+        int mid = low +(high-low)/2;
+        if(check(mid))
+        {
+            output = max(output,mid);
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
+        }
+    }
+    cout << output << endl;
 }
 
 int32_t main()

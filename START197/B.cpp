@@ -145,38 +145,6 @@ void sieve(int n,vector<bool> &prime)
 }
 prime[0]=prime[1]=false;
 
-
-DSU
-
-const int N = 2e5+10;
-
-int parent[N];int size[N];
-
-void make(int v)
-{
-    parent[v]=v;
-    size[v]=1;
-}
-
-int find(int v)
-{
-    if(v==parent[v]) return v;
-    //path compression
-    return parent[v] = find(parent[v]);
-}
-
-void Union(int a,int b)
-{
-    a = find(a); b = find(b);
-    if(a!=b)
-    {
-        //union by size
-        if(size[a]<size[b]) swap(a,b); 
-        parent[b]=a;
-        size[a] += size[b];
-    }
-}
-    
 */
 
 /*void setIO(string s) {
@@ -186,7 +154,18 @@ void Union(int a,int b)
 
 void solve()
 {
-    
+    int n; cin>>n;
+    cout << 2 << endl;
+    for(int i=1;i<=n;i++)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+    for(int i=n;i>=1;i--)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
 }
 
 int32_t main()
