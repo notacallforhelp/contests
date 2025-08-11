@@ -183,22 +183,73 @@ void Union(int a,int b)
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int N = 2e5+10;
+vector<int> adj[N];
+vector<bool> vis(N);
+int output = 0;
+
+void dfs(int vertex,int depth) 
+{
+	if(vis[vertex]) return;
+	vis[vertex] = true;
+
+    for(auto child:adj[vertex])
+    {
+        dfs(child,depth+1);
+    }
+
+    int g = adj[vertex].size();
+
+    //cout << vertex << " " << g << " "<<depth<<endl;
+
+    if(depth>1&&g==1)
+    {
+        ++output;
+    }
+
+    return;
+}
+
 void solve()
 {
     int n; cin>>n;
-    vector<int> A(n); for(auto &i:A)cin>>i;
-    vector<int> B(n); for(auto &i:B)cin>>i;
+    for(int i=0;i<n-1;i++)
+    {
+        int x,y; cin>>x>>y;
+        adj[--x].push_back(--y);
+        adj[y].push_back(x);
+    }
 
-    int output = 1;
+    int mx_c = 0;
+    for(int i=0;i<n;i++)
+    {
+        int p = adj[i].size();
+        mx_c = max(mx_c,p);
+    }
+
+    //cout << mx_c << endl;
+    vector<int> poss;
 
     for(int i=0;i<n;i++)
     {
-        if(A[i]>B[i])
+        int p = adj[i].size();
+        if(p==mx_c)
         {
-            output += A[i]-B[i];
+            poss.push_back(i);
         }
     }
+
+    dfs(poss[0],0);
+
     cout << output << endl;
+ 
+    for(int i=0;i<n;i++)
+    {
+        vis[i]=0;
+        adj[i].clear();
+    }
+    
+    output=0;
 }
 
 int32_t main()

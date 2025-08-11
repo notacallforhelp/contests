@@ -183,22 +183,49 @@ void Union(int a,int b)
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int N = 2e5+10;
+vector<int> adj[N];
+vector<int> deg(N);
+
 void solve()
 {
     int n; cin>>n;
-    vector<int> A(n); for(auto &i:A)cin>>i;
-    vector<int> B(n); for(auto &i:B)cin>>i;
 
-    int output = 1;
+    for(int i=0;i<n-1;i++)
+    {
+        int x,y; cin>>x>>y;
+        adj[--x].push_back(--y);
+        adj[y].push_back(x);
+        deg[x]++;
+        deg[y]++;
+    }
+
+    if(n<=3)
+    {
+        cout << 0 << endl; return;
+    }
+
+    int ct_leaf=0;
+    int mx = 0;
 
     for(int i=0;i<n;i++)
     {
-        if(A[i]>B[i])
+        if(deg[i]==1) ++ct_leaf;
+        int lcl = 0;
+        for(auto child:adj[i])
         {
-            output += A[i]-B[i];
+            if(deg[child]==1) ++lcl;
         }
+        mx = max(mx,lcl);
     }
-    cout << output << endl;
+
+    cout << ct_leaf-mx << endl;
+
+    for(int i=0;i<n;i++)
+    {
+        adj[i].clear();
+        deg[i]=0;
+    }
 }
 
 int32_t main()

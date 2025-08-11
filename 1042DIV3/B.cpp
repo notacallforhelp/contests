@@ -186,19 +186,24 @@ void Union(int a,int b)
 void solve()
 {
     int n; cin>>n;
-    vector<int> A(n); for(auto &i:A)cin>>i;
-    vector<int> B(n); for(auto &i:B)cin>>i;
-
-    int output = 1;
-
-    for(int i=0;i<n;i++)
+    /*if(n==2)
     {
-        if(A[i]>B[i])
-        {
-            output += A[i]-B[i];
-        }
+        cout <<"-1 2\n"; return;
+    }*/
+
+    for(int i=0;i<n-1;i++)
+    {
+        if(i%2==0) cout << -1 << " ";
+        if(i%2==1) cout << 3 << " " ;
     }
-    cout << output << endl;
+    if(n%2==0)
+    {
+        cout << 2 << endl;
+    }
+    else
+    {
+        cout << -1 << endl;
+    }
 }
 
 int32_t main()

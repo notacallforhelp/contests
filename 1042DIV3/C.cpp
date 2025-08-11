@@ -185,20 +185,41 @@ void Union(int a,int b)
 
 void solve()
 {
-    int n; cin>>n;
-    vector<int> A(n); for(auto &i:A)cin>>i;
-    vector<int> B(n); for(auto &i:B)cin>>i;
+    int n,k; cin>>n>>k;
+    vector<int> S(n); for(auto &ele:S)cin>>ele;
+    vector<int> T(n);
+    map<int,int> M;
 
-    int output = 1;
+    for(auto &ele:T)
+    {
+        cin>>ele;
+        ++M[ele%k];
+    }
 
     for(int i=0;i<n;i++)
     {
-        if(A[i]>B[i])
+        int dv = S[i]/k;
+        int x = S[i]-dv*k;
+        int y = abs(x-k);
+
+        //cout << x << " " << y << endl;
+
+        if(M[x]==0&&M[y]==0)
         {
-            output += A[i]-B[i];
+            cout << "NO" << endl; return;
+        }
+        else if(M[x]>=M[y])
+        {
+            --M[x];
+        }
+        else
+        {
+            --M[y];
         }
     }
-    cout << output << endl;
+
+    cout << "YES" << endl;
+
 }
 
 int32_t main()
