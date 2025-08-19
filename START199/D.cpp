@@ -223,7 +223,7 @@ void solve()
 
         cout << i << " " << check << " "<<output << endl;
 
-        i=check-1;
+        i=
     }
 
     output += sz*(sz+1)/2;

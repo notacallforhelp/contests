@@ -176,6 +176,37 @@ void Union(int a,int b)
     }
 }
 
+DJIKSTRA
+
+vector<bool> vis(n);
+set<pair<int,int>> s;  // {dist,node}
+s.insert({0,src})
+vector<int> dist(n,INF); dist[src]=0;
+
+while(!s.empty())
+{
+    auto it = s.begin();
+    int v = it->second;
+    int d = it->first;
+    s.erase(it);
+
+    if(vis[v]) continue;
+    vis[v]=1;
+
+    for(auto [child,wt]:adj[v])
+    {
+        if(!vis[child[ && dist[v]+wt<dist[child])
+        {
+            //optional
+            auto old = s.find({dist[child],child});
+            if(old!=s.end()) s.erase(old);
+
+            dist[child]=dist[v]+wt;
+            s.insert({dist[child],child});
+        }
+    }
+}
+
 */
 
 /*void setIO(string s) {
