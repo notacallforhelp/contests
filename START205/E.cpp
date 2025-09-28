@@ -274,7 +274,6 @@ bool dfs(int vertex,int maintain,bool used,int receivedwater)
         water_without_fix=max(receivedwater-(receivedwater/leakiness[vertex]),0ll);
         water_with_fix = max(receivedwater,0ll);
     }
-    
 
     bool no_fix = true;
     if(water_without_fix<maintain) no_fix=false;
@@ -283,7 +282,8 @@ bool dfs(int vertex,int maintain,bool used,int receivedwater)
     {
         for(auto child:adj[vertex])
         {
-            no_fix = no_fix & dfs(child,maintain,0,water_without_fix);
+            no_fix = no_fix & dfs(child,maintain,used,water_without_fix);
+            if(!no_fix) break;
         }
     }
     
@@ -293,9 +293,13 @@ bool dfs(int vertex,int maintain,bool used,int receivedwater)
     bool lastoption = true;
     if(water_with_fix<maintain) lastoption = false;
 
-    for(auto child:adj[vertex])
+    if(lastoption)
     {
-        lastoption = lastoption & dfs(child,maintain,1,water_with_fix);
+        for(auto child:adj[vertex])
+        {
+            lastoption = lastoption & dfs(child,maintain,1,water_with_fix);
+            if(!lastoption) break;
+        }
     }
 
     if(lastoption) return true;

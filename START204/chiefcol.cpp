@@ -75,7 +75,7 @@ int64_t pw(int64_t a, int64_t b) {
 int64_t C(int64_t n, int64_t k) {
 	if(n < k) return 0LL;
 	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
-    // return fact[n]*%mod*ifact[n-k]%mod*ifact[k]%mod;
+    // return fact[n]%mod*ifact[n-k]%mod*ifact[k]%mod;
 }
 
 ifact[N-1] = pw(fact[N-1],mod-2);
@@ -207,34 +207,32 @@ while(!s.empty())
     }
 }
 
-Quantfest modint
+too many modulos then use this
 
-const long long MOD = 1e9+7;
-long long modpow(long long a,long long b)
+void add_self(int &a,int b)
 {
-    long long res = 1;
-    a %= MOD;
-    while(b>0){
-        if(b&1) res = (res*a)%MOD;
-        a = (a*a)%MOD;
-        b >>= 1;
-    }
-    return res;
+    a += b;
+    if(a>=mod) a-=mod;
 }
 
-long long modinv(long long q)
+void self_min(int &a,int b)
 {
-    return modpow(q,MOD-2);
+    a = min(a,b);
 }
 
-// long long ans = (p*modinv(q))%MOD;
+void self_max(int &a,int b)
+{
+    a = max(a,b);
+}
 
-Quantfest 6 decimal places
+example of iterative dfs
+auto dfs = [&](auto&& self, TreeNode* node) -> int {
+    if (!node) return 0;
+    return 1 + max(self(self, node->left), self(self, node->right));
+};
+return dfs(dfs, root);
 
-double p = 5, q = 7;
-double prop = p/q;
-cout << fixed << setprecision(6) << prop << endl;
-
+__builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
 */
 
@@ -245,12 +243,59 @@ cout << fixed << setprecision(6) << prop << endl;
 
 void solve()
 {
-    
+    int n,k; cin>>n>>k;
+    vector<int> W(n); for(auto &ele:W)cin>>ele;
+    vector<int> C(n); for(auto &ele:C)cin>>ele;
+
+    vector<int> consec(n);
+    vector<int> consec_val(n);
+    consec[n-1]=1;
+    consec_val[n-1]=W[n-1];
+
+    for(int i=n-2;i>=1;i--)
+    {
+        if(C[i]==C[i+1])
+        {
+            consec_val[i]=W[i]+consec[i+1];
+            consec[i] = consec[i+1]+1;
+        }
+        else
+        {
+            consec_val[i]=W[i];
+            consec[i]=1;
+        }
+    }
+
+    int currcolor = n;
+    int money = 0;
+
+    for(int i=1;i<n;i++)
+    {
+        if(currcolor==C[i])
+        {
+            money += W[i];
+            continue;
+        }
+        int op1 = -W[i];
+        //int op2 = consec[i]*W[i]-k;
+        int op2 = consec_val[i]-k;
+        if(op2>=op1)
+        {
+            currcolor = C[i];
+            money += W[i]-k;
+        }
+        else
+        {
+            money -= W[i];
+        }
+    }
+    cout << money << endl;
 }
 
 int32_t main()
 {
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+
     //setIO("problemname");
 
     int t; cin>>t;

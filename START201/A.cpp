@@ -207,35 +207,6 @@ while(!s.empty())
     }
 }
 
-Quantfest modint
-
-const long long MOD = 1e9+7;
-long long modpow(long long a,long long b)
-{
-    long long res = 1;
-    a %= MOD;
-    while(b>0){
-        if(b&1) res = (res*a)%MOD;
-        a = (a*a)%MOD;
-        b >>= 1;
-    }
-    return res;
-}
-
-long long modinv(long long q)
-{
-    return modpow(q,MOD-2);
-}
-
-// long long ans = (p*modinv(q))%MOD;
-
-Quantfest 6 decimal places
-
-double p = 5, q = 7;
-double prop = p/q;
-cout << fixed << setprecision(6) << prop << endl;
-
-
 */
 
 /*void setIO(string s) {
@@ -245,12 +216,16 @@ cout << fixed << setprecision(6) << prop << endl;
 
 void solve()
 {
-    
+    int a, b; cin>>a>>b;
+    a = min(a,b/2);
+    b = min(b,2*a);
+    cout << a+b << endl;
 }
 
 int32_t main()
 {
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+
     //setIO("problemname");
 
     int t; cin>>t;

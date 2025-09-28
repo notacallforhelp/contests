@@ -207,35 +207,6 @@ while(!s.empty())
     }
 }
 
-Quantfest modint
-
-const long long MOD = 1e9+7;
-long long modpow(long long a,long long b)
-{
-    long long res = 1;
-    a %= MOD;
-    while(b>0){
-        if(b&1) res = (res*a)%MOD;
-        a = (a*a)%MOD;
-        b >>= 1;
-    }
-    return res;
-}
-
-long long modinv(long long q)
-{
-    return modpow(q,MOD-2);
-}
-
-// long long ans = (p*modinv(q))%MOD;
-
-Quantfest 6 decimal places
-
-double p = 5, q = 7;
-double prop = p/q;
-cout << fixed << setprecision(6) << prop << endl;
-
-
 */
 
 /*void setIO(string s) {
@@ -243,14 +214,77 @@ cout << fixed << setprecision(6) << prop << endl;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int INF = 1e12;
+
 void solve()
 {
-    
+    int n; cin>>n;
+    string s; cin>>s;
+
+    vector<int> pf(n+1,0);
+
+    for(int i=1;i<=n;i++)
+    {
+        pf[i]=pf[i-1]+ (s[i-1]=='1'?1:0);
+    }
+
+    vector<vector<int>> B (n+1,vector<int>(n+1,0));
+    vector<vector<int>> dp (n+1,vector<int>(n+1,INF));
+
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            if(i<=j)
+            {
+                B[i][j] = pf[j]-pf[i-1];
+                B[j][i]= B[i][j];
+            }
+        }
+    }
+
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            cout << B[i][j] << " "; 
+        }
+        cout << endl;
+    }
+
+    for(int i=1;i<=n;i++)
+    {
+        dp[i][1]= B[i][1];
+        dp[1][i]= B[1][i];
+    }
+    cout << endl;
+
+    for(int i=1;i<=n;i++)
+    {
+        for(int j=1;j<=n;j++)
+        {
+            if(i-1>=1)
+            {
+                dp[i][j] = min(dp[i][j],dp[i-1][j]+B[i][j]);
+            }
+            if(j-1>=1)
+            {
+                dp[i][j] = min(dp[i][j],dp[i][j-1]+B[i][j]);
+            }
+
+            cout << dp[i][j] << " ";
+        }
+        cout << endl;
+    }
+
+    cout << dp[n][n] << endl;
+
 }
 
 int32_t main()
 {
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+
     //setIO("problemname");
 
     int t; cin>>t;

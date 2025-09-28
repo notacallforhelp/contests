@@ -226,6 +226,8 @@ void solve()
     int output = 45;
 
     k = k-9;
+
+    
 }
 
 int32_t main()

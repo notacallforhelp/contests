@@ -75,7 +75,7 @@ int64_t pw(int64_t a, int64_t b) {
 int64_t C(int64_t n, int64_t k) {
 	if(n < k) return 0LL;
 	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
-    // return fact[n]*%mod*ifact[n-k]%mod*ifact[k]%mod;
+    // return fact[n]%mod*ifact[n-k]%mod*ifact[k]%mod;
 }
 
 ifact[N-1] = pw(fact[N-1],mod-2);
@@ -207,34 +207,32 @@ while(!s.empty())
     }
 }
 
-Quantfest modint
+too many modulos then use this
 
-const long long MOD = 1e9+7;
-long long modpow(long long a,long long b)
+void add_self(int &a,int b)
 {
-    long long res = 1;
-    a %= MOD;
-    while(b>0){
-        if(b&1) res = (res*a)%MOD;
-        a = (a*a)%MOD;
-        b >>= 1;
-    }
-    return res;
+    a += b;
+    if(a>=mod) a-=mod;
 }
 
-long long modinv(long long q)
+void self_min(int &a,int b)
 {
-    return modpow(q,MOD-2);
+    a = min(a,b);
 }
 
-// long long ans = (p*modinv(q))%MOD;
+void self_max(int &a,int b)
+{
+    a = max(a,b);
+}
 
-Quantfest 6 decimal places
+example of iterative dfs
+auto dfs = [&](auto&& self, TreeNode* node) -> int {
+    if (!node) return 0;
+    return 1 + max(self(self, node->left), self(self, node->right));
+};
+return dfs(dfs, root);
 
-double p = 5, q = 7;
-double prop = p/q;
-cout << fixed << setprecision(6) << prop << endl;
-
+__builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
 */
 
@@ -245,12 +243,56 @@ cout << fixed << setprecision(6) << prop << endl;
 
 void solve()
 {
-    
+    int n,m; cin>>n>>m;
+    vector<int> A(n); 
+    for(int i=0;i<n;i++)
+    {
+        int x; cin>>x;
+        A[i]=x%m;
+    }
+
+    map<int,int> M;
+    set<int> s; int left_sum = 0;
+
+    for(auto &ele:A)
+    {
+        left_sum += ele;
+        ++M[ele];
+        s.insert(ele);
+    }
+
+    vector<int> B;
+
+    for(auto &ele:s)
+    {
+        B.push_back(ele);
+    }
+
+    int output = left_sum;
+    int added = 0;
+
+    for(int i=B.size()-1;i>=0;i--)
+    {
+        if(B[i]==0) break;
+        int diff = m-(B[i]+added);
+        int otherele_ct = n-M[B[i]];
+        int otherele_add = otherele_ct*diff;
+        int thisele_ct = M[B[i]];
+        int thisele_sum = M[B[i]]*(B[i]+added);
+        int result = left_sum + otherele_add - thisele_sum;
+        output = min(output,result);
+        left_sum = result;
+        added += diff;
+    }
+
+    cout << output << endl;
+
 }
 
 int32_t main()
 {
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+
     //setIO("problemname");
 
     int t; cin>>t;

@@ -75,7 +75,7 @@ int64_t pw(int64_t a, int64_t b) {
 int64_t C(int64_t n, int64_t k) {
 	if(n < k) return 0LL;
 	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
-    // return fact[n]*%mod*ifact[n-k]%mod*ifact[k]%mod;
+    // return fact[n]%mod*ifact[n-k]%mod*ifact[k]%mod;
 }
 
 ifact[N-1] = pw(fact[N-1],mod-2);
@@ -206,6 +206,33 @@ while(!s.empty())
         }
     }
 }
+
+too many modulos then use this
+
+void add_self(int &a,int b)
+{
+    a += b;
+    if(a>=mod) a-=mod;
+}
+
+void self_min(int &a,int b)
+{
+    a = min(a,b);
+}
+
+void self_max(int &a,int b)
+{
+    a = max(a,b);
+}
+
+example of iterative dfs
+auto dfs = [&](auto&& self, TreeNode* node) -> int {
+    if (!node) return 0;
+    return 1 + max(self(self, node->left), self(self, node->right));
+};
+return dfs(dfs, root);
+
+__builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
 */
 

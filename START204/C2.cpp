@@ -75,7 +75,7 @@ int64_t pw(int64_t a, int64_t b) {
 int64_t C(int64_t n, int64_t k) {
 	if(n < k) return 0LL;
 	return (fact[n] * pw((fact[n - k] * fact[k]) % mod, mod - 2)) % mod;
-    // return fact[n]*%mod*ifact[n-k]%mod*ifact[k]%mod;
+    // return fact[n]%mod*ifact[n-k]%mod*ifact[k]%mod;
 }
 
 ifact[N-1] = pw(fact[N-1],mod-2);
@@ -207,34 +207,32 @@ while(!s.empty())
     }
 }
 
-Quantfest modint
+too many modulos then use this
 
-const long long MOD = 1e9+7;
-long long modpow(long long a,long long b)
+void add_self(int &a,int b)
 {
-    long long res = 1;
-    a %= MOD;
-    while(b>0){
-        if(b&1) res = (res*a)%MOD;
-        a = (a*a)%MOD;
-        b >>= 1;
-    }
-    return res;
+    a += b;
+    if(a>=mod) a-=mod;
 }
 
-long long modinv(long long q)
+void self_min(int &a,int b)
 {
-    return modpow(q,MOD-2);
+    a = min(a,b);
 }
 
-// long long ans = (p*modinv(q))%MOD;
+void self_max(int &a,int b)
+{
+    a = max(a,b);
+}
 
-Quantfest 6 decimal places
+example of iterative dfs
+auto dfs = [&](auto&& self, TreeNode* node) -> int {
+    if (!node) return 0;
+    return 1 + max(self(self, node->left), self(self, node->right));
+};
+return dfs(dfs, root);
 
-double p = 5, q = 7;
-double prop = p/q;
-cout << fixed << setprecision(6) << prop << endl;
-
+__builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
 */
 
@@ -243,14 +241,102 @@ cout << fixed << setprecision(6) << prop << endl;
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int INF = -1e15;
+
 void solve()
 {
-    
+    int n, k; cin>>n>>k;
+    vector<int> W(n+1),C(n+1);
+
+    for(int i=1;i<=n;i++)
+    {
+        cin>>W[i];
+    }
+    for(int i=1;i<=n;i++)
+    {
+        cin>>C[i];
+    }
+
+    vector<vector<int>> dp(n+1,vector<int>(2,INF));
+    //vector<vector<int>> col(n+1,vector<int>(2,n));
+    vector<vector<set<int>>> COL(n+1,vector<set<int>>(2));
+
+    COL[1][0].insert(n);
+    COL[1][1].insert(n);
+
+    dp[1][0]=0;
+    dp[1][1]=0;
+
+    for(int i=2;i<=n;i++)
+    {
+        if(dp[i-1][0]>dp[i-1][1])
+        {
+            for(auto &ele:COL[i-1][0])
+            {
+                if(ele!=n) COL[i][0].insert(ele);
+                
+            }
+            //COL[i][0].insert(COL[i-1][0]);
+            //col[i][0]=col[i-1][0];
+        }
+        else if(dp[i-1][1]>dp[i-1][0])
+        {
+            for(auto &ele:COL[i-1][1])
+            {
+                if(ele!=n) COL[i][0].insert(ele);
+            }
+            //COL[i][0].insert(COL[i-1][1]);
+            //col[i][0]=col[i-1][1];
+        }
+        else
+        {
+            //COL[i][0].insert()
+            //col[i][0]=-1; //here both cols will work
+            for(auto &ele:COL[i-1][1])
+            {
+                if(ele!=n) COL[i][0].insert(ele);
+            }
+            for(auto &ele:COL[i-1][0])
+            {
+                if(ele!=n) COL[i][0].insert(ele);
+            }
+        }
+
+        dp[i][0]=max(dp[i-1][0],dp[i-1][1])-W[i];
+
+        int cost_0 = k;
+        int cost_1 = k;
+
+        if(COL[i-1][0].count(C[i]))
+        {
+            cost_0=0;
+        }
+        if(COL[i-1][1].count(C[i]))
+        {
+            cost_1=0;
+        }
+
+        //cout << dp[i-1][1] << " " << W[i] << " " << cost_1 << endl;
+        //cout << dp[i-1][0] << " " << W[i] << " " << cost_0 << endl;
+
+
+        dp[i][1]=max(dp[i][1],dp[i-1][1]+W[i]-cost_1);
+        dp[i][1]=max(dp[i][1],dp[i-1][0]+W[i]-cost_0);
+
+        COL[i][1].insert(C[i]);
+
+        //cout << dp[i][0] << " " << dp[i][1] << endl;
+
+    }
+
+    cout << max(dp[n][0],dp[n][1]) << endl;
+
 }
 
 int32_t main()
 {
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+
     //setIO("problemname");
 
     int t; cin>>t;
