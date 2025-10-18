@@ -234,6 +234,43 @@ return dfs(dfs, root);
 
 __builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
+int get_first_bit(long long n){
+	return 63 - __builtin_clzll(n);
+}
+
+int get_bit_count(long long n){
+	return __builtin_popcountll(n);
+}
+
+PROBABILITY / DP Functions
+
+const int MOD = 998244353;
+
+int add(int x, int y) {
+   x += y;
+   if (x >= MOD) x -= MOD;
+   if (x < 0) x += MOD;
+   return x;
+}
+ 
+int mul(int x, int y) {
+  return x * 1LL * y % MOD;
+}
+ 
+int binpow(int x, int y) {
+  int z = 1;
+  while (y) {
+    if (y & 1) z = mul(z, x);
+    x = mul(x, x);
+    y >>= 1;
+  }
+  return z;
+}
+ 
+int divide(int x, int y) {
+  return mul(x, binpow(y, MOD - 2));
+}
+
 */
 
 /*void setIO(string s) {
@@ -244,6 +281,7 @@ __builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives f
 void solve()
 {
     
+
 }
 
 int32_t main()
