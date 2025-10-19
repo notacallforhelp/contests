@@ -342,8 +342,8 @@ void solve()
 
         if(st[i+1]==0)
         {
-            ans[i]=0;
-            ans[i+1]=1;
+            ans[i]=1;
+            ans[i+1]=0;
             fill();
             return;
         }

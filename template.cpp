@@ -271,6 +271,10 @@ int divide(int x, int y) {
   return mul(x, binpow(y, MOD - 2));
 }
 
+RANDOMIZATION
+mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
+uniform_int_distribution uni(1, 3);  // ={1,2,3}
+
 */
 
 /*void setIO(string s) {
@@ -278,15 +282,17 @@ int divide(int x, int y) {
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
-void solve()
-{
-    
 
+void solve()
+{   
+    
 }
 
 int32_t main()
 {
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+
+    
 
     //setIO("problemname");
 
