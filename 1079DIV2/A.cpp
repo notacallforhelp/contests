@@ -290,112 +290,91 @@ uniform_int_distribution uni(1, 3);  // ={1,2,3}
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+int sum(int k)
+{
+    int s = 0;
+    while(k)
+    {
+        s += k%10;
+        k/=10;
+    }
+    return s;
+}
+
 void solve()
 {   
-    int l,w,r,g,b; cin>>l>>w>>r>>g>>b;
+   int x; cin>>x;
 
-    int lowerside = min(l,w);
-    int higherside = max(l,w);
+   int s = sum(x);
 
-    int output = 0;
-    int leftover = 0;
-    //int sidesleft = 4;
-    int lowerleft = 2;
-    int higherleft = 2;
-
-    vector<int> A = {r,g,b};
-    sort(A.begin(),A.end());
-    reverse(A.begin(),A.end());
-
-    map<int,vector<pair<int,pair<int,int>>>> M;
-    M[1] = {{higherside,{1,0}},{lowerside,{0,1}}};
-    M[2] = {{2*lowerside,{0,2}},{lowerside+higherside,{1,1}},{2*higherside,{2,0}}};
-    M[3] = {{2*lowerside+higherside,{1,2}},{2*higherside+lowerside,{2,1}}};
-    M[4] = {{2*lowerside+2*higherside,{2,2}}};
-
-    deque<int> game;
-
-    for(int i=0;i<3;i++)
-    {
-        int conquered = 0;
-        int valueleft = A[i];
-        int lowerused = 0;
-        int higherused = 0;
-
-        for(int j=1;j<=4;j++)
-        {
-            for(auto &ele:M[j])
-            {
-                int v = ele.first;
-                int highercontri = ele.second.first;
-                int lowercontri = ele.second.second;
-
-                if(A[i]>=v&&lowerleft>=lowercontri&&higherleft>=highercontri)
-                {
-                    if(conquered<lowercontri+highercontri)
-                    {
-                        conquered = j;
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                    else if(conquered==(lowercontri+highercontri)&&(A[i]-v)<=valueleft)
-                    {
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                }
-            }
-        }
-
-        output += conquered;
-        higherleft -= higherused;
-        lowerleft -= lowerused;
-
-        // cout << conquered << endl;
-        // cout << valueleft << endl;
-        // cout << higherleft << " " << lowerleft << endl;
-
-        if(valueleft>0) 
-        {
-            leftover+=valueleft;
-            game.push_back(valueleft);
-        }
-    }
-
-    sort(game.begin(),game.end());
-    reverse(game.begin(),game.end());
-
-    vector<int> lens;
-
-    for(int i=0;i<higherleft;i++)
-    {
-        lens.push_back(higherleft);
-    }
-    for(int i=0;i<lowerleft;i++)
-    {
-        lens.push_back(lowerleft);
-    }
-
-    while(leftover)
-    {
-        int u = game[0];
-        bool found = false;
-
-        for(int i=0;i<lens.size();i++)
-        {
-            if(u<=lens[i])
-            {
-                lens[i] -= u;
-                found = true;
-                
-            }
-        }
-
-        game.pop_front();
-    }
+   if(x%9==0&&(s-10)%11!=0)
+   {
+        cout << 10 << "\n";
+   }
+   else
+   {
+        cout << 0 << "\n";
+   }
 }
+
+int solve2(int x)
+{   
+   //int x; cin>>x;
+
+   if(x%9!=0)
+   {
+        return 0;
+   }
+
+   int ele = x/9;
+
+   //cout << x << " " << ele << endl;
+
+   auto func = [&](int n)
+   {
+        //return 10+(n-1)*11-(n/11)*10 -(n/111)*10;
+        return 10+(n-1)*11-(n/11)*10 -(n/111)*10; //-(n/1111)*10-(n/11111)*10-(n/111111)*10-(n/1111111)*10-(n/11111111)*10-(n/111111111)*10-(n/1111111111)*10;
+   };
+
+   //cout << func(2) << endl;
+
+   int low = 1;
+   int high = 1e10;
+
+   bool correct = true;
+
+   while(low<=high)
+   {
+        int mid = low + (high-low)/2;
+        int v = func(mid);
+        if(v==ele)
+        {
+            correct=false;
+            break;
+        }
+        else if(v<ele)
+        {
+            low=mid+1;
+        }
+        else
+        {
+            high=mid-1;
+        }
+   }
+
+   if(correct)
+   {
+        return 10;
+        //cout << 10 << "\n";
+   }
+   else
+   {
+        return 0;
+        //cout << 0 << "\n";
+   }
+}
+
+
 
 int32_t main()
 {
@@ -403,11 +382,28 @@ int32_t main()
 
     //setIO("problemname");
 
-    int t; cin>>t;
+    int p;cin>>p;
 
-    while(t--)
+    set<int> s;
+    for(int i=0;i<=p;i+=9)
     {
-        solve();
+        s.insert(i);
+    }
+
+    for(int i=1;i<=p;i++)
+    {
+        int k = i-sum(i);
+        if(s.count(k))
+        {
+            s.erase(k);
+        }
+    }
+
+    for(auto &ele:s)
+    {
+        cout << ele << "\n";
+        // int p = solve2(ele);
+        // cout << ele << " " << ele/9 << " " << p << "\n";
     }
 
     return 0;

@@ -313,6 +313,8 @@ void solve()
         while(tot)
         {
             int idx = 0;
+
+            for(int i=0;i<)
         }
 
 

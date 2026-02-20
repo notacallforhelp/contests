@@ -225,20 +225,12 @@ void self_max(int &a,int b)
     a = max(a,b);
 }
 
-example of iterative dfs [DONT USE vector<int> adj[] declared locally]
-auto dfs = [&](auto &&dfs,int u,int fa) -> void
-    {
-        d[u] = d[fa] + 1;
-        cnt[d[u]]++;
-        for(auto v : edge[u])
-        {
-            if(v != fa)
-            {
-                dfs(dfs,v,u);
-            }
-        }
-    };
-    dfs(1,0);
+example of iterative dfs
+auto dfs = [&](auto&& self, TreeNode* node) -> int {
+    if (!node) return 0;
+    return 1 + max(self(self, node->left), self(self, node->right));
+};
+return dfs(dfs, root);
 
 __builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
@@ -292,109 +284,44 @@ uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
 void solve()
 {   
-    int l,w,r,g,b; cin>>l>>w>>r>>g>>b;
+   int n; cin>>n;
 
-    int lowerside = min(l,w);
-    int higherside = max(l,w);
+   vector<vector<int>> adj(n+1);
+   vector<int> cnt(n+1);
+   vector<int> d(n+1);
 
-    int output = 0;
-    int leftover = 0;
-    //int sidesleft = 4;
-    int lowerleft = 2;
-    int higherleft = 2;
+   for(int i=0;i<n-1;i++)
+   {
+        int u,v; cin>>u>>v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+   }
 
-    vector<int> A = {r,g,b};
-    sort(A.begin(),A.end());
-    reverse(A.begin(),A.end());
-
-    map<int,vector<pair<int,pair<int,int>>>> M;
-    M[1] = {{higherside,{1,0}},{lowerside,{0,1}}};
-    M[2] = {{2*lowerside,{0,2}},{lowerside+higherside,{1,1}},{2*higherside,{2,0}}};
-    M[3] = {{2*lowerside+higherside,{1,2}},{2*higherside+lowerside,{2,1}}};
-    M[4] = {{2*lowerside+2*higherside,{2,2}}};
-
-    deque<int> game;
-
-    for(int i=0;i<3;i++)
-    {
-        int conquered = 0;
-        int valueleft = A[i];
-        int lowerused = 0;
-        int higherused = 0;
-
-        for(int j=1;j<=4;j++)
+   auto dfs = [&](auto&& self,int vertex,int parent)->void{
+        d[vertex]=d[parent]+1;
+        cnt[d[vertex]]++;
+        for(auto &ele:adj[vertex])
         {
-            for(auto &ele:M[j])
+            if(ele!=parent)
             {
-                int v = ele.first;
-                int highercontri = ele.second.first;
-                int lowercontri = ele.second.second;
-
-                if(A[i]>=v&&lowerleft>=lowercontri&&higherleft>=highercontri)
-                {
-                    if(conquered<lowercontri+highercontri)
-                    {
-                        conquered = j;
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                    else if(conquered==(lowercontri+highercontri)&&(A[i]-v)<=valueleft)
-                    {
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                }
+                self(self,ele,vertex);
             }
         }
+        return;
+   };
 
-        output += conquered;
-        higherleft -= higherused;
-        lowerleft -= lowerused;
+   dfs(dfs,1,0);
+   
+   int ans = 0;
+   for(int i=1;i<=n;i++)
+   {
+        ans = max(ans,cnt[i]);
+        int p = adj[i].size();
+        ans = max(ans,i==1?p+1:p);
+   }
 
-        // cout << conquered << endl;
-        // cout << valueleft << endl;
-        // cout << higherleft << " " << lowerleft << endl;
+   cout << ans << "\n";
 
-        if(valueleft>0) 
-        {
-            leftover+=valueleft;
-            game.push_back(valueleft);
-        }
-    }
-
-    sort(game.begin(),game.end());
-    reverse(game.begin(),game.end());
-
-    vector<int> lens;
-
-    for(int i=0;i<higherleft;i++)
-    {
-        lens.push_back(higherleft);
-    }
-    for(int i=0;i<lowerleft;i++)
-    {
-        lens.push_back(lowerleft);
-    }
-
-    while(leftover)
-    {
-        int u = game[0];
-        bool found = false;
-
-        for(int i=0;i<lens.size();i++)
-        {
-            if(u<=lens[i])
-            {
-                lens[i] -= u;
-                found = true;
-                
-            }
-        }
-
-        game.pop_front();
-    }
 }
 
 int32_t main()

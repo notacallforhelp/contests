@@ -225,20 +225,12 @@ void self_max(int &a,int b)
     a = max(a,b);
 }
 
-example of iterative dfs [DONT USE vector<int> adj[] declared locally]
-auto dfs = [&](auto &&dfs,int u,int fa) -> void
-    {
-        d[u] = d[fa] + 1;
-        cnt[d[u]]++;
-        for(auto v : edge[u])
-        {
-            if(v != fa)
-            {
-                dfs(dfs,v,u);
-            }
-        }
-    };
-    dfs(1,0);
+example of iterative dfs
+auto dfs = [&](auto&& self, TreeNode* node) -> int {
+    if (!node) return 0;
+    return 1 + max(self(self, node->left), self(self, node->right));
+};
+return dfs(dfs, root);
 
 __builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
@@ -290,111 +282,95 @@ uniform_int_distribution uni(1, 3);  // ={1,2,3}
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int N = (1ll<<16);
+int used[N];
+int val[N];
+
 void solve()
 {   
-    int l,w,r,g,b; cin>>l>>w>>r>>g>>b;
+   int n; cin>>n;
 
-    int lowerside = min(l,w);
-    int higherside = max(l,w);
+   
+   int f = (1ll<<n)-1;
+   used[f]=1;
+   vector<int> P;
+   P.push_back(f);
+   int idx = 1;
 
-    int output = 0;
-    int leftover = 0;
-    //int sidesleft = 4;
-    int lowerleft = 2;
-    int higherleft = 2;
+   int curr = f;
 
-    vector<int> A = {r,g,b};
-    sort(A.begin(),A.end());
-    reverse(A.begin(),A.end());
-
-    map<int,vector<pair<int,pair<int,int>>>> M;
-    M[1] = {{higherside,{1,0}},{lowerside,{0,1}}};
-    M[2] = {{2*lowerside,{0,2}},{lowerside+higherside,{1,1}},{2*higherside,{2,0}}};
-    M[3] = {{2*lowerside+higherside,{1,2}},{2*higherside+lowerside,{2,1}}};
-    M[4] = {{2*lowerside+2*higherside,{2,2}}};
-
-    deque<int> game;
-
-    for(int i=0;i<3;i++)
-    {
-        int conquered = 0;
-        int valueleft = A[i];
-        int lowerused = 0;
-        int higherused = 0;
-
-        for(int j=1;j<=4;j++)
+   while(curr>0)
+   {
+        int highestpop = 0;
+        int ele = f+1;
+        for(int i=0;i<(1ll<<n);i++)
         {
-            for(auto &ele:M[j])
+            if(used[i]) continue;
+            int j = 0;
+            for(int k=0;k<n;k++)
             {
-                int v = ele.first;
-                int highercontri = ele.second.first;
-                int lowercontri = ele.second.second;
-
-                if(A[i]>=v&&lowerleft>=lowercontri&&higherleft>=highercontri)
-                {
-                    if(conquered<lowercontri+highercontri)
-                    {
-                        conquered = j;
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                    else if(conquered==(lowercontri+highercontri)&&(A[i]-v)<=valueleft)
-                    {
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                }
+                bool a = (1ll<<k)&i;
+                bool b = (1ll<<k)&curr;
+                if(a&&b) ++j;
+            }
+            if(j==highestpop)
+            {
+                ele = min(ele,i);
+            }
+            else if(j>highestpop)
+            {
+                ele = i;
+                highestpop = j;
             }
         }
 
-        output += conquered;
-        higherleft -= higherused;
-        lowerleft -= lowerused;
+        curr = curr&ele;
+        P.push_back(ele);
+        used[ele]=1;
+   }
 
-        // cout << conquered << endl;
-        // cout << valueleft << endl;
-        // cout << higherleft << " " << lowerleft << endl;
+   for(int i=0;i<(1ll<<n);i++)
+   {
+    if(used[i]==0) P.push_back(i);
+    
+        used[i]=0;
+   }
 
-        if(valueleft>0) 
-        {
-            leftover+=valueleft;
-            game.push_back(valueleft);
-        }
-    }
+   for(auto &ele:P)
+   {
+    cout << ele << " ";
+   }
+   cout << endl;
 
-    sort(game.begin(),game.end());
-    reverse(game.begin(),game.end());
+   vector<int> A(1ll<<n);
 
-    vector<int> lens;
+   for(int i=0;i<(1ll<<n);i++)
+   {
+        A[i]=i;
+   }
 
-    for(int i=0;i<higherleft;i++)
-    {
-        lens.push_back(higherleft);
-    }
-    for(int i=0;i<lowerleft;i++)
-    {
-        lens.push_back(lowerleft);
-    }
+   auto cmp = [&](int a,int b){
+    if(val[a]!=val[b]) return val[a]>val[b];
 
-    while(leftover)
-    {
-        int u = game[0];
-        bool found = false;
+    return a<b;
+   };
 
-        for(int i=0;i<lens.size();i++)
-        {
-            if(u<=lens[i])
-            {
-                lens[i] -= u;
-                found = true;
-                
-            }
-        }
+   sort(A.begin(),A.end(),cmp);
 
-        game.pop_front();
-    }
+   for(auto &ele:A)
+   {
+    cout << ele << " ";
+   }
+   cout << endl;
+
+   if(A==P)
+   {
+        cout << "equal\n";
+   }
+   else
+   {
+        cout << "fail for " << n  << endl;
+   }
 }
 
 int32_t main()
@@ -402,6 +378,23 @@ int32_t main()
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
 
     //setIO("problemname");
+
+    for(int i=0;i<N;i++)
+    {
+        int g = 0;
+        for(int j=0;j<16;j++)
+        {
+            if((1ll<<j)&i)
+            {
+                ++g;
+            }
+            else
+            {
+                break;
+            }
+        }
+        val[i]=g;
+    }
 
     int t; cin>>t;
 

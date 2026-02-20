@@ -290,111 +290,70 @@ uniform_int_distribution uni(1, 3);  // ={1,2,3}
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+int get_first_bit(long long n){
+	return 63 - __builtin_clzll(n);
+}
+
+int get_bit_count(long long n){
+	return __builtin_popcountll(n);
+}
+
+int fact[100];
+
 void solve()
 {   
-    int l,w,r,g,b; cin>>l>>w>>r>>g>>b;
+   int n,k; cin>>n>>k;
 
-    int lowerside = min(l,w);
-    int higherside = max(l,w);
+   int low = 1;
+   int high = n;
 
-    int output = 0;
-    int leftover = 0;
-    //int sidesleft = 4;
-    int lowerleft = 2;
-    int higherleft = 2;
+   int divs = get_first_bit(n);
 
-    vector<int> A = {r,g,b};
-    sort(A.begin(),A.end());
-    reverse(A.begin(),A.end());
+   cout << divs << endl;
 
-    map<int,vector<pair<int,pair<int,int>>>> M;
-    M[1] = {{higherside,{1,0}},{lowerside,{0,1}}};
-    M[2] = {{2*lowerside,{0,2}},{lowerside+higherside,{1,1}},{2*higherside,{2,0}}};
-    M[3] = {{2*lowerside+higherside,{1,2}},{2*higherside+lowerside,{2,1}}};
-    M[4] = {{2*lowerside+2*higherside,{2,2}}};
+   int output = 0;
 
-    deque<int> game;
+   bool check = false;
 
-    for(int i=0;i<3;i++)
-    {
-        int conquered = 0;
-        int valueleft = A[i];
-        int lowerused = 0;
-        int higherused = 0;
+   vector<int> D;
 
-        for(int j=1;j<=4;j++)
+   for(int div = 0;div<divs;div++){
+        int low = 1;
+        int high = div;
+
+        int p = high+1;
+        //cout << div << " " << low << " " << high << "\n";
+        while(low<=high)
         {
-            for(auto &ele:M[j])
+            int mid = low + (high-low)/2;
+
+            if(div+1+mid>k)
             {
-                int v = ele.first;
-                int highercontri = ele.second.first;
-                int lowercontri = ele.second.second;
-
-                if(A[i]>=v&&lowerleft>=lowercontri&&higherleft>=highercontri)
-                {
-                    if(conquered<lowercontri+highercontri)
-                    {
-                        conquered = j;
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                    else if(conquered==(lowercontri+highercontri)&&(A[i]-v)<=valueleft)
-                    {
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                }
+                p = min(p,mid);
+                high=mid-1;
             }
-        }
-
-        output += conquered;
-        higherleft -= higherused;
-        lowerleft -= lowerused;
-
-        // cout << conquered << endl;
-        // cout << valueleft << endl;
-        // cout << higherleft << " " << lowerleft << endl;
-
-        if(valueleft>0) 
-        {
-            leftover+=valueleft;
-            game.push_back(valueleft);
-        }
-    }
-
-    sort(game.begin(),game.end());
-    reverse(game.begin(),game.end());
-
-    vector<int> lens;
-
-    for(int i=0;i<higherleft;i++)
-    {
-        lens.push_back(higherleft);
-    }
-    for(int i=0;i<lowerleft;i++)
-    {
-        lens.push_back(lowerleft);
-    }
-
-    while(leftover)
-    {
-        int u = game[0];
-        bool found = false;
-
-        for(int i=0;i<lens.size();i++)
-        {
-            if(u<=lens[i])
+            else
             {
-                lens[i] -= u;
-                found = true;
-                
+                low=mid+1;
             }
+            //cout << low << " " << high << "\n";
         }
 
-        game.pop_front();
-    }
+        cout << div << " " << p <<" "<<div-p+1 <<endl;
+
+        for(int i=p;i<=div;i++)
+        {
+            output += fact[div]/fact[i];
+
+            //cout << fact[div]/fact[p] << " " << div << " " << p << endl;
+        }
+        //cout << endl;
+        //cout << output << endl;
+   }
+
+   if(divs+get_bit_count(n)>k) ++output;
+
+   cout << output << "\n";
 }
 
 int32_t main()
@@ -402,6 +361,12 @@ int32_t main()
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
 
     //setIO("problemname");
+    fact[0]=1;
+
+    for(int i=1;i<100;i++)
+    {
+        fact[i]=fact[i-1]*i;
+    }
 
     int t; cin>>t;
 

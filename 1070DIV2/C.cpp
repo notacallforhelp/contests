@@ -225,20 +225,12 @@ void self_max(int &a,int b)
     a = max(a,b);
 }
 
-example of iterative dfs [DONT USE vector<int> adj[] declared locally]
-auto dfs = [&](auto &&dfs,int u,int fa) -> void
-    {
-        d[u] = d[fa] + 1;
-        cnt[d[u]]++;
-        for(auto v : edge[u])
-        {
-            if(v != fa)
-            {
-                dfs(dfs,v,u);
-            }
-        }
-    };
-    dfs(1,0);
+example of iterative dfs
+auto dfs = [&](auto&& self, TreeNode* node) -> int {
+    if (!node) return 0;
+    return 1 + max(self(self, node->left), self(self, node->right));
+};
+return dfs(dfs, root);
 
 __builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
@@ -290,111 +282,96 @@ uniform_int_distribution uni(1, 3);  // ={1,2,3}
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+
 void solve()
 {   
-    int l,w,r,g,b; cin>>l>>w>>r>>g>>b;
+    int n; cin>>n;
+    vector<int> A(n); for(auto &ele:A) cin>>ele;
 
-    int lowerside = min(l,w);
-    int higherside = max(l,w);
-
-    int output = 0;
-    int leftover = 0;
-    //int sidesleft = 4;
-    int lowerleft = 2;
-    int higherleft = 2;
-
-    vector<int> A = {r,g,b};
-    sort(A.begin(),A.end());
-    reverse(A.begin(),A.end());
-
-    map<int,vector<pair<int,pair<int,int>>>> M;
-    M[1] = {{higherside,{1,0}},{lowerside,{0,1}}};
-    M[2] = {{2*lowerside,{0,2}},{lowerside+higherside,{1,1}},{2*higherside,{2,0}}};
-    M[3] = {{2*lowerside+higherside,{1,2}},{2*higherside+lowerside,{2,1}}};
-    M[4] = {{2*lowerside+2*higherside,{2,2}}};
-
-    deque<int> game;
-
-    for(int i=0;i<3;i++)
+    bool alleven = true;
+    bool allodd = true;
+    vector<int> odds;
+    vector<int> evens;
+    for(auto &ele:A)
     {
-        int conquered = 0;
-        int valueleft = A[i];
-        int lowerused = 0;
-        int higherused = 0;
-
-        for(int j=1;j<=4;j++)
+        if(ele%2!=0)
         {
-            for(auto &ele:M[j])
-            {
-                int v = ele.first;
-                int highercontri = ele.second.first;
-                int lowercontri = ele.second.second;
+            alleven=false;
+            odds.push_back(ele);
+        } 
+        else
+        {
+            allodd = false;
+            evens.push_back(ele);
+        }
 
-                if(A[i]>=v&&lowerleft>=lowercontri&&higherleft>=highercontri)
-                {
-                    if(conquered<lowercontri+highercontri)
-                    {
-                        conquered = j;
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                    else if(conquered==(lowercontri+highercontri)&&(A[i]-v)<=valueleft)
-                    {
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                }
+    }
+
+    sort(odds.begin(),odds.end());
+    sort(evens.begin(),evens.end());
+    reverse(evens.begin(),evens.end());
+
+    if(alleven)
+    {
+        for(int i=0;i<n;i++)
+        {
+            cout << 0 << " ";
+        }
+        cout << endl; return;
+    }
+    if(allodd)
+    {
+        for(int i=0;i<n;i++)
+        {
+            if(i%2==0)
+            {
+                cout << odds[odds.size()-1] << " ";
+            }
+            else
+            {
+                cout << 0 << " ";
             }
         }
+        cout << endl;
+        return;
+    }
 
-        output += conquered;
-        higherleft -= higherused;
-        lowerleft -= lowerused;
+    vector<int> pf_evens(n+1);
 
-        // cout << conquered << endl;
-        // cout << valueleft << endl;
-        // cout << higherleft << " " << lowerleft << endl;
+    for(int i=1;i<=evens.size();i++)
+    {
+        pf_evens[i]+=pf_evens[i-1]+evens[i-1];
+        //cout << pf_evens[i] << " ";
+    }
+    //cout << endl;
+    int e = evens.size();
+    int o = odds.size();
 
-        if(valueleft>0) 
+    for(int k=1;k<=n;k++)
+    {
+        if(k<=e+1)
         {
-            leftover+=valueleft;
-            game.push_back(valueleft);
+            cout << odds[o-1]+pf_evens[k-1] << " ";
         }
-    }
-
-    sort(game.begin(),game.end());
-    reverse(game.begin(),game.end());
-
-    vector<int> lens;
-
-    for(int i=0;i<higherleft;i++)
-    {
-        lens.push_back(higherleft);
-    }
-    for(int i=0;i<lowerleft;i++)
-    {
-        lens.push_back(lowerleft);
-    }
-
-    while(leftover)
-    {
-        int u = game[0];
-        bool found = false;
-
-        for(int i=0;i<lens.size();i++)
+        else
         {
-            if(u<=lens[i])
+            int d = k-(e+1);
+            if(d%2!=0) ++d;
+            if(d>=o)
             {
-                lens[i] -= u;
-                found = true;
-                
+                cout << 0 << " ";
+            }
+            else
+            {
+                int p = k-d;
+                cout << odds[o-1]+pf_evens[p-1] << " ";
             }
         }
-
-        game.pop_front();
     }
+
+    cout << endl;
+
+
 }
 
 int32_t main()

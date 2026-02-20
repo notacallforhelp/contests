@@ -145,6 +145,21 @@ void sieve(int n,vector<bool> &prime)
 }
 prime[0]=prime[1]=false;
 
+PRIME FACTORS
+
+vector<int> prime_factors(int x){
+    vector<int> pf;
+    for(ll i=2;i*i<=x;i++)
+    {
+        while(x%i==0){
+            pf.push_back(i);
+            x /= i;
+        }
+    }
+    if(x>1) pf.push_back(x);
+    return pf;
+}
+
 
 DSU
 
@@ -225,12 +240,20 @@ void self_max(int &a,int b)
     a = max(a,b);
 }
 
-example of iterative dfs
-auto dfs = [&](auto&& self, TreeNode* node) -> int {
-    if (!node) return 0;
-    return 1 + max(self(self, node->left), self(self, node->right));
-};
-return dfs(dfs, root);
+example of iterative dfs [DONT USE vector<int> adj[] declared locally]
+auto dfs = [&](auto &&dfs,int u,int fa) -> void
+    {
+        d[u] = d[fa] + 1;
+        cnt[d[u]]++;
+        for(auto v : edge[u])
+        {
+            if(v != fa)
+            {
+                dfs(dfs,v,u);
+            }
+        }
+    };
+    dfs(1,0);
 
 __builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
@@ -282,17 +305,14 @@ uniform_int_distribution uni(1, 3);  // ={1,2,3}
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
-
 void solve()
 {   
-    
+   
 }
 
 int32_t main()
 {
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
-
-    
 
     //setIO("problemname");
 

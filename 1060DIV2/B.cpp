@@ -225,20 +225,12 @@ void self_max(int &a,int b)
     a = max(a,b);
 }
 
-example of iterative dfs [DONT USE vector<int> adj[] declared locally]
-auto dfs = [&](auto &&dfs,int u,int fa) -> void
-    {
-        d[u] = d[fa] + 1;
-        cnt[d[u]]++;
-        for(auto v : edge[u])
-        {
-            if(v != fa)
-            {
-                dfs(dfs,v,u);
-            }
-        }
-    };
-    dfs(1,0);
+example of iterative dfs
+auto dfs = [&](auto&& self, TreeNode* node) -> int {
+    if (!node) return 0;
+    return 1 + max(self(self, node->left), self(self, node->right));
+};
+return dfs(dfs, root);
 
 __builtin_clz(a); //returns count of leading zeroes of a, doing 31- that gives first set bit of a 
 
@@ -290,116 +282,51 @@ uniform_int_distribution uni(1, 3);  // ={1,2,3}
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+
 void solve()
 {   
-    int l,w,r,g,b; cin>>l>>w>>r>>g>>b;
+    int n; cin>>n;
+    vector<int> A(n); for(auto &ele:A) cin>>ele;
 
-    int lowerside = min(l,w);
-    int higherside = max(l,w);
+    vector<int> pf(n); pf[0]=A[0];
+
+    for(int i=1;i<n;i++)
+    {
+        pf[i]=max(pf[i-1],A[i]);
+    }
+
+    for(int i=1;i<n;i+=2)
+    {
+        if(A[i]<=A[i-1]||((i+1<n)&&(A[i]<=A[i+1])))
+        {
+            A[i]=pf[i];
+        }
+    }
 
     int output = 0;
-    int leftover = 0;
-    //int sidesleft = 4;
-    int lowerleft = 2;
-    int higherleft = 2;
 
-    vector<int> A = {r,g,b};
-    sort(A.begin(),A.end());
-    reverse(A.begin(),A.end());
-
-    map<int,vector<pair<int,pair<int,int>>>> M;
-    M[1] = {{higherside,{1,0}},{lowerside,{0,1}}};
-    M[2] = {{2*lowerside,{0,2}},{lowerside+higherside,{1,1}},{2*higherside,{2,0}}};
-    M[3] = {{2*lowerside+higherside,{1,2}},{2*higherside+lowerside,{2,1}}};
-    M[4] = {{2*lowerside+2*higherside,{2,2}}};
-
-    deque<int> game;
-
-    for(int i=0;i<3;i++)
+    for(int i=0;i<n;i+=2)
     {
-        int conquered = 0;
-        int valueleft = A[i];
-        int lowerused = 0;
-        int higherused = 0;
-
-        for(int j=1;j<=4;j++)
+        if((i-1>=0)&&A[i]>=A[i-1])
         {
-            for(auto &ele:M[j])
-            {
-                int v = ele.first;
-                int highercontri = ele.second.first;
-                int lowercontri = ele.second.second;
-
-                if(A[i]>=v&&lowerleft>=lowercontri&&higherleft>=highercontri)
-                {
-                    if(conquered<lowercontri+highercontri)
-                    {
-                        conquered = j;
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                    else if(conquered==(lowercontri+highercontri)&&(A[i]-v)<=valueleft)
-                    {
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                }
-            }
+            output += abs(A[i]-A[i-1])+1;
+            A[i]=A[i-1]-1;
         }
-
-        output += conquered;
-        higherleft -= higherused;
-        lowerleft -= lowerused;
-
-        // cout << conquered << endl;
-        // cout << valueleft << endl;
-        // cout << higherleft << " " << lowerleft << endl;
-
-        if(valueleft>0) 
+        if((i+1<n)&&A[i]>=A[i+1])
         {
-            leftover+=valueleft;
-            game.push_back(valueleft);
+            output += abs(A[i]-A[i+1])+1;
+            A[i]=A[i+1]-1;
         }
     }
 
-    sort(game.begin(),game.end());
-    reverse(game.begin(),game.end());
-
-    vector<int> lens;
-
-    for(int i=0;i<higherleft;i++)
-    {
-        lens.push_back(higherleft);
-    }
-    for(int i=0;i<lowerleft;i++)
-    {
-        lens.push_back(lowerleft);
-    }
-
-    while(leftover)
-    {
-        int u = game[0];
-        bool found = false;
-
-        for(int i=0;i<lens.size();i++)
-        {
-            if(u<=lens[i])
-            {
-                lens[i] -= u;
-                found = true;
-                
-            }
-        }
-
-        game.pop_front();
-    }
+    cout << output << endl;
 }
 
 int32_t main()
 {
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+
+    
 
     //setIO("problemname");
 

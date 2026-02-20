@@ -292,109 +292,44 @@ uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
 void solve()
 {   
-    int l,w,r,g,b; cin>>l>>w>>r>>g>>b;
+   int n,k; cin>>n>>k;
+   vector<int> A(n); for(auto &ele:A) cin>>ele;
 
-    int lowerside = min(l,w);
-    int higherside = max(l,w);
+   vector<pair<int,int>> prs;  // { FREQ OF ELE, ELE }
 
-    int output = 0;
-    int leftover = 0;
-    //int sidesleft = 4;
-    int lowerleft = 2;
-    int higherleft = 2;
+   map<int,int> M;
+   for(auto &ele:A)
+   {
+        M[ele]++;
+   }
 
-    vector<int> A = {r,g,b};
-    sort(A.begin(),A.end());
-    reverse(A.begin(),A.end());
+   int output=0;
 
-    map<int,vector<pair<int,pair<int,int>>>> M;
-    M[1] = {{higherside,{1,0}},{lowerside,{0,1}}};
-    M[2] = {{2*lowerside,{0,2}},{lowerside+higherside,{1,1}},{2*higherside,{2,0}}};
-    M[3] = {{2*lowerside+higherside,{1,2}},{2*higherside+lowerside,{2,1}}};
-    M[4] = {{2*lowerside+2*higherside,{2,2}}};
+   for(auto &[u,v]:M)
+   {
+        prs.push_back({v,u});
+        ++output;
+   }
 
-    deque<int> game;
+   sort(prs.begin(),prs.end());  // 
 
-    for(int i=0;i<3;i++)
-    {
-        int conquered = 0;
-        int valueleft = A[i];
-        int lowerused = 0;
-        int higherused = 0;
+   for(auto &ele:prs)
+   {
+        int ct = ele.first; // freq of this ele
+        int val = ele.second;
 
-        for(int j=1;j<=4;j++)
+        if(val==A[0]) continue;
+        if(ct<=k)
         {
-            for(auto &ele:M[j])
-            {
-                int v = ele.first;
-                int highercontri = ele.second.first;
-                int lowercontri = ele.second.second;
-
-                if(A[i]>=v&&lowerleft>=lowercontri&&higherleft>=highercontri)
-                {
-                    if(conquered<lowercontri+highercontri)
-                    {
-                        conquered = j;
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                    else if(conquered==(lowercontri+highercontri)&&(A[i]-v)<=valueleft)
-                    {
-                        valueleft = A[i]-v;
-                        lowerused = lowercontri;
-                        higherused = highercontri;
-                    }
-                }
-            }
+            k -= ct;
+            ct = 0;
+            --output;
         }
+   }
 
-        output += conquered;
-        higherleft -= higherused;
-        lowerleft -= lowerused;
+   cout << output << "\n";
 
-        // cout << conquered << endl;
-        // cout << valueleft << endl;
-        // cout << higherleft << " " << lowerleft << endl;
 
-        if(valueleft>0) 
-        {
-            leftover+=valueleft;
-            game.push_back(valueleft);
-        }
-    }
-
-    sort(game.begin(),game.end());
-    reverse(game.begin(),game.end());
-
-    vector<int> lens;
-
-    for(int i=0;i<higherleft;i++)
-    {
-        lens.push_back(higherleft);
-    }
-    for(int i=0;i<lowerleft;i++)
-    {
-        lens.push_back(lowerleft);
-    }
-
-    while(leftover)
-    {
-        int u = game[0];
-        bool found = false;
-
-        for(int i=0;i<lens.size();i++)
-        {
-            if(u<=lens[i])
-            {
-                lens[i] -= u;
-                found = true;
-                
-            }
-        }
-
-        game.pop_front();
-    }
 }
 
 int32_t main()
