@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -325,15 +305,133 @@ vector<int> prefFunc(string &s){
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+vector<int> primes;
+const int N = 80;
+vector<bool> prime(N+1,1);
+const int INF = -1e9;
+
+void sieve(int n,vector<bool> &prime)
+{
+    for(int i=2;i<=n;i++)
+    {
+        if(prime[i]==true)
+        {
+            primes.push_back(i);
+            for(int p=i*i;p<=n;p+=i)
+            {
+                prime[p]=false;
+            }
+        }
+    }
+}
 
 void solve()
 {  
-    
+    int n; cin>>n;
+    vector<int> A(n); for(auto &ele:A) cin>>ele;
+    vector<int> B(n); for(auto &ele:B) cin>>ele;
+
+    vector<int> L(n);
+
+    for(int i=1;i<n-1;i++)
+    {
+        int l = __gcd(A[i-1],A[i]);
+        int r = __gcd(A[i],A[i+1]);
+        L[i] = l*r/__gcd(l,r);
+    }
+    L[0] = __gcd(A[0],A[1]);
+    L[n-1]=__gcd(A[n-1],A[n-2]);
+
+    for(int i=0;i<n;i++)
+    {
+        if(L[i]>B[i]) L[i]=A[i];
+    }
+
+    vector<vector<int>> dp(n,vector<int>(21,INF));
+
+    dp[0][0] = (L[0]!=A[0]&&L[0]<=B[0]);
+
+    int rg = __gcd(A[0],A[1]);
+
+    for(int j=1;j<=20;j++)
+    {
+        int x = L[0]*primes[j-1];
+        if(x<=B[0]&&x!=A[0]&&__gcd(x,L[1])==rg) dp[0][j]=1;
+    }
+
+    for(int i=1;i<n-1;i++)
+    {
+        dp[i][0] = max(dp[i][0],dp[i-1][0]+(L[i]<A[i]));
+        int rg = __gcd(A[i],A[i+1]);
+        int lg = __gcd(A[i],A[i-1]);
+
+        for(int j=1;j<=20;j++)
+        {
+            dp[i][0] = max(dp[i][0],dp[i-1][j]+(L[i]<A[i]));
+
+            int x = L[i]*primes[j-1];
+            int xlg = __gcd(x,L[i+1]);
+
+            for(int k=0;k<=20;k++)
+            {
+                int y = L[i-1];
+                if(k!=0)
+                {
+                    y = L[i-1]*primes[k-1];
+                }
+                int g = __gcd(x,y);
+
+                if(x<=B[i]&&x!=A[i]&&xlg==rg&&g==lg)
+                {
+                    dp[i][j] = max(dp[i][j],dp[i-1][k]+1);
+                }
+            }
+        }
+    }
+
+    dp[n-1][0] = max(dp[n-1][0],dp[n-2][0]+(L[n-1]<A[n-1]));
+    int lg = __gcd(A[n-1],A[n-2]);
+
+    for(int j=1;j<=20;j++)
+    {
+        dp[n-1][0] = max(dp[n-1][0],dp[n-2][j]+(L[n-1]<A[n-1]));
+        int x = L[n-1]*primes[j-1];
+
+        for(int k=0;k<=20;k++)
+        {
+            int y = L[n-2];
+            if(k!=0)
+            {
+                y = L[n-2]*primes[k-1];
+            }
+
+            if(x<=B[n-1]&&x!=A[n-1]&&__gcd(x,y)==lg)
+            {
+                dp[n-1][j] = max(dp[n-1][j],dp[n-2][k]+1);
+            }
+        }
+    }
+
+    int output = INF;
+
+    for(int j=0;j<=20;j++)
+    {
+        output = max(output,dp[n-1][j]);
+    }
+
+    cout << output << "\n";
+
 }
 
 int32_t main()
 {
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
+
+    prime[0]=prime[1]=false;
+    sieve(N,prime);
+
+    // cout << primes.size() << endl;
+    // return 0;
 
     //setIO("problemname");
 

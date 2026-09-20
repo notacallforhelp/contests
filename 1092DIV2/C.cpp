@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -325,10 +305,43 @@ vector<int> prefFunc(string &s){
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int INF = 1e18;
 
 void solve()
 {  
-    
+    int n,k, p, q; cin>>n>>k>>p>>q;
+
+    vector<int> A(n+1);
+    for(int i=1;i<=n;i++) cin>>A[i];
+
+    int op1 = 0, op2 = 0;
+
+    vector<int> pf(n+1);
+
+    for(int i=1;i<=n;i++)
+    {
+        pf[i] = pf[i-1] + min(A[i]%p,A[i]%q%p);
+    }
+
+    for(int i=1;i<=k;i++)
+    {
+        op1 += A[i]%p;
+        op2 += A[i]%q%p;
+    }
+
+    int output = min(op1,op2) + pf[n] - pf[k];
+
+    for(int i=k+1;i<=n;i++)
+    {
+        op1 -= A[i-k]%p;
+        op2 -= A[i-k]%q%p;
+        op1 += A[i]%p;
+        op2 += A[i]%q%p;
+
+        output = min(output,min(op1,op2)+pf[n]-pf[i]+pf[i-k]);
+    }
+
+    cout << output << "\n";
 }
 
 int32_t main()

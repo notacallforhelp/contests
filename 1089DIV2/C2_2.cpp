@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -325,10 +305,75 @@ vector<int> prefFunc(string &s){
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
-
 void solve()
 {  
+    int n; cin>>n;
+    vector<int> A(n); for(auto &ele:A) cin>>ele;
+    vector<int> B(n); for(auto &ele:B) cin>>ele;
+    vector<int> C(n);
     
+    for(int i=0;i<n;i++)
+    {
+        if(i==0) C[i] = gcd(A[i],A[i+1]);
+        else if(i==n-1) C[i] = gcd(A[i],A[i-1]);
+        else 
+        {
+            C[i] = lcm(gcd(A[i],A[i-1]),gcd(A[i],A[i+1]));
+        }
+
+        if(C[i]>B[i]) C[i]=A[i];
+    }
+
+    vector<int> primes = {1, 2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73};
+    int L = primes.size();
+
+    vector<vector<int>> dp(n,vector<int>(L,-1e18));
+
+    int rg = gcd(A[0],A[1]);
+    for(int i=0;i<L;i++)
+    {
+        if(i==0)
+        {
+            dp[0][0] = (C[0]!=A[0]);
+            continue;
+        }
+
+        int x = C[0]*primes[i];
+        if(x!=A[0]&&x<=B[0]&&rg==gcd(x,C[1])) dp[0][i]=1;
+    }
+
+    for(int i=1;i<n;i++)
+    {
+        for(int j=0;j<L;j++)
+        {
+            for(int k=0;k<L;k++)
+            {
+                if(j==0)
+                {
+                    dp[i][j] = max(dp[i][j],dp[i-1][k]+(C[i]!=A[i]));
+                    continue;
+                }
+
+                int x = C[i]*primes[j];
+                int y = C[i-1]*primes[k];
+
+                if(x<=B[i]&&x!=A[i]&&gcd(x,y)==gcd(A[i],A[i-1]))
+                {
+                    if(i<n-1&&gcd(A[i],A[i+1])==gcd(x,C[i+1]))
+                    {
+                        dp[i][j] = max(dp[i][j],dp[i-1][k]+1);
+                    }
+                    else if(i==n-1)
+                    {
+                        dp[i][j] = max(dp[i][j],dp[i-1][k]+1);
+                    }
+                }
+            }
+        }
+    }
+
+    cout << max(0LL,*max_element(dp[n-1].begin(),dp[n-1].end())) << "\n";
+
 }
 
 int32_t main()

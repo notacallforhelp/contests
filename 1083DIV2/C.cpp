@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -325,10 +305,59 @@ vector<int> prefFunc(string &s){
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
-
 void solve()
-{  
-    
+{   
+   int n; cin>>n;
+
+   vector<vector<int>> grid(n);
+
+   for(int i=0;i<n;i++)
+   {
+        int l; cin>>l;
+        vector<int> temp;
+        for(int j=0;j<l;j++)
+        {
+            int x; cin>>x;
+            temp.push_back(x);
+        }
+        reverse(temp.begin(),temp.end());
+        set<int> s;
+        for(int j=0;j<l;j++)
+        {
+            if(s.count(temp[j])) continue;
+            s.insert(temp[j]);
+            grid[i].push_back(temp[j]);
+        }
+   }
+
+   set<int> nums;
+
+   
+   while(!grid.empty())
+   {
+        sort(grid.begin(),grid.end());
+        for(auto &ele:grid[0])
+        {
+            cout << ele << " ";
+            nums.insert(ele);
+        }
+
+        vector<vector<int>> temp;
+        for(int i=1;i<grid.size();i++)
+        {
+            vector<int> vec;
+            for(int j=0;j<grid[i].size();j++)
+            {
+                if(nums.count(grid[i][j])) continue;
+                vec.push_back(grid[i][j]);
+            }
+            temp.push_back(vec);
+        }
+        grid = temp;
+   }
+
+   cout << "\n";
+
 }
 
 int32_t main()

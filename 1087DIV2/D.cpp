@@ -323,7 +323,10 @@ void solve()
 
    auto cmp = [&](char a,char b){
         if(M[a]!=M[b]) return M[a]>M[b];
-        if(idx-1>=0) return output[idx-1];
+        if(idx-1>=0)
+        {
+            
+        }
         return a;
    };
 

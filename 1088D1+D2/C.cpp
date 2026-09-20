@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -328,7 +308,104 @@ vector<int> prefFunc(string &s){
 
 void solve()
 {  
+    int n,k; cin>>n>>k;
+    vector<int> A(n+1); for(int i=1;i<=n;i++) cin>>A[i];
+    vector<int> B(n+1); for(int i=1;i<=n;i++) cin>>B[i];
+
+    int fixed = n-k;
+    int var = max(0ll,2*k-n);
+
+    //cout << fixed << " " << var << "\n";
+
+    set<int> st2;
+    for(int i=1;i<=n;i++)
+    {
+        if(B[i]==-1) continue;
+        if(st2.count(B[i]))
+        {
+            cout << "NO\n"; return;
+        }
+        else
+        {
+            st2.insert(B[i]);
+        }
+    }   
+
     
+    for(int i=1;i<=fixed;i++)
+    {
+        if(A[i]!=B[i])
+        {
+            if(B[i]==-1)
+            {
+                B[i]=A[i];
+            }
+            else
+            {
+                cout << "NO\n"; return;
+            }
+        }
+    }
+
+    for(int i=n;i>=n-fixed+1;i--)
+    {
+        if(A[i]!=B[i])
+        {
+            if(B[i]==-1)
+            {
+                B[i]=A[i];
+            }
+            else
+            {
+                cout << "NO\n"; return;
+            }
+        }
+    }
+
+    
+
+    //cout << fixed << " " << var << endl;
+
+    int ptr = fixed+1;
+    set<int> s;
+
+    while(var--)
+    {
+        if(B[ptr]!=-1) s.insert(B[ptr]);
+        ++ptr;
+    }
+
+    // for(auto &ele:s)
+    // {
+    //     cout << ele << " ";
+    // }
+    // cout << endl;
+
+    ptr = fixed+1;
+    var = max(0ll,2*k-n);
+
+    while(var--)
+    {
+        if(s.count(A[ptr]))
+        {
+            s.erase(A[ptr]);
+        }
+        ++ptr;
+    }
+
+    // for(auto &ele:s)
+    // {
+    //     cout << ele << " ";
+    // }
+    // cout << endl;
+
+    if(!s.empty())
+    {
+        cout << "NO\n"; return;
+    }
+
+
+    cout << "YES\n";
 }
 
 int32_t main()

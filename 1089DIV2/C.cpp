@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -328,7 +308,42 @@ vector<int> prefFunc(string &s){
 
 void solve()
 {  
-    
+    int n; cin>>n;
+    vector<int> A(n); for(auto &ele:A) cin>>ele;
+    vector<int> B(n); for(auto &ele:B) cin>>ele;
+
+    int output = 0;
+
+    for(int i=0;i<n;i++)
+    {
+        if(i==0)
+        {
+            int g = __gcd(A[i],A[i+1]);
+            if(A[i]==g) continue;
+           // cout << i << " " << output << endl;
+            ++output;
+            continue;
+        }
+        else if(i==n-1)
+        {
+            int g = __gcd(A[i],A[i-1]);
+            if(A[i]==g) continue;
+            ++output;
+            continue;
+        }
+
+        int lg = __gcd(A[i],A[i-1]);
+        int rg = __gcd(A[i],A[i+1]);
+
+        int com = lg*rg/__gcd(lg,rg);
+
+        if(A[i]==com) continue;
+
+        ++output;
+    }
+
+    cout << output << "\n";
+
 }
 
 int32_t main()

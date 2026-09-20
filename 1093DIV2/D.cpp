@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -325,10 +305,117 @@ vector<int> prefFunc(string &s){
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+int n;
+
+int query(int st,int mid)
+{
+    if(mid==2*n+1) return 3;
+
+    cout << "? "<< mid << " ";
+
+    for(int i=st;i<=mid;i++)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    int a; cin>>a;
+
+    if(mid%2!=a%2) return 3;
+    return 2;
+}
+
+int query(int st,int mid,int ed)
+{
+    if(mid==2*n+1) return 3;
+
+    cout << "? "<< mid << " ";
+    for(int i=st;i<=mid;i++)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    int a; cin>>a;
+
+    cout << "? " << 2*n-mid << " ";
+    for(int i=mid+1;i<=ed;i++)
+    {
+        cout << i << " ";
+    }
+    cout << endl;
+
+    int b; cin>>b;
+
+    int del = a-b;
+    if(del==1) return 1;
+    if(del==-1) return 2;
+    if(mid%2!=a%2) return 3;
+    return 0;
+}
 
 void solve()
 {  
-    
+    cin>>n;
+
+    int l = 1;
+    int r = 2*n+1;
+    int x = -1;
+
+    while(l<=r)
+    {
+        int mid = l + (r-l)/2;
+        int k = query(1ll,mid,2*n+1);
+        if(k>=1)
+        {
+            x = mid;
+            r = mid-1;
+        }
+        else
+        {
+            l = mid+1;
+        }
+    }
+
+    l = x+1;
+    r = 2*n+1;
+    int y = -1;
+
+    while(l<=r)
+    {
+        int mid = l + (r-l)/2;
+        int k = query(1,mid,2*n+1);
+        if(k>=2)
+        {
+            y = mid;
+            r=mid-1;
+        }
+        else
+        {
+            l=mid+1;
+        }
+    }
+
+    int z = -1;
+    l = y+1;
+    r = 2*n+1;
+
+    while(l<=r)
+    {
+        int mid = l + (r-l)/2;
+        int k = query(1,mid);
+        if(k>=3)
+        {
+            z = mid;
+            r = mid-1;
+        }
+        else
+        {
+            l = mid+1;
+        }
+    }
+
+    cout << "! " << x << " " << y << " " << z << endl;
 }
 
 int32_t main()

@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -328,7 +308,83 @@ vector<int> prefFunc(string &s){
 
 void solve()
 {  
-    
+    int n,k; cin>>n>>k;
+    vector<int> A(n); for(auto &ele:A) cin>>ele;
+    vector<int> B(n); for(auto &ele:B) cin>>ele;
+
+    vector<int> pos(n);
+    map<int,int> cnt;
+
+    for(int i=0;i<k;i++)
+    {
+        pos[i] = A[i];
+        for(int j=i;j<n;j+=k)
+        {
+            if(A[j]!=pos[i])
+            {
+                pos[i]=-1;
+            }
+        }
+
+        if(pos[i]!=-1)
+        {
+            ++cnt[pos[i]];
+        }
+
+        if(pos[i]==-1)
+        {
+            for(int j=i;j<n;j+=k)
+            {
+                if(B[j]!=-1&&B[j]!=A[j])
+                {
+                    cout << "NO\n"; return;
+                }
+            }
+        }
+    }
+
+    map<int,int> cnt2;
+
+    for(int i=0;i<k;i++)
+    {
+        if(pos[i]!=-1)
+        {
+            set<int> s;
+            for(int j=i;j<n;j+=k)
+            {
+                s.insert(B[j]);
+            }
+
+            s.erase(-1);
+
+            if(s.size()>=2)
+            {
+                for(int j=i;j<n;j+=k)
+                {
+                    if(B[j]!=-1&&A[j]!=B[j])
+                    {
+                        cout << "NO\n"; return;
+                    }
+                }
+            }
+
+            if(s.size()==1)
+            {
+                cnt2[*s.begin()]++;
+            }
+        }
+    }
+
+    for(auto &[k,x]:cnt2)
+    {
+        if(x>cnt[k])
+        {
+            cout << "NO\n"; return;
+        }
+    }
+
+    cout << "YES\n";
+
 }
 
 int32_t main()

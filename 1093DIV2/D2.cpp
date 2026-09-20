@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -325,10 +305,112 @@ vector<int> prefFunc(string &s){
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+int n;
+
+int query(int mid)
+{
+    cout << "? " << mid << " ";
+
+    for(int i=1;i<=mid;i++) cout << i << " ";
+    cout << endl;
+
+    int a; cin>>a;
+
+    return (mid-a)%2!=0;
+}
+
+int query2(int mid)
+{
+    cout << "? " << 2*n+1-mid+1 << " ";
+
+    for(int i=mid;i<=2*n+1;i++) cout << i << " ";
+    cout << endl;
+
+    int a; cin>>a;
+
+    int sz = 2*n+1-mid+1;
+
+    return (sz-a)%2!=0;
+}
 
 void solve()
 {  
-    
+    cin>>n;
+
+    int l = 1;
+    int r = 2*n+1;
+    int z = -1;
+
+    while(l<=r)
+    {
+        int mid = l + (r-l)/2;
+        int p = query(mid);
+
+        if(p)
+        {
+            z = mid;
+            r=mid-1;
+        }
+        else
+        {
+            l=mid+1;
+        }
+    }
+
+    l = 1;
+    r = 2*n+1;
+    int x = -1;
+
+    while(l<=r)
+    {
+        int mid = l + (r-l)/2;
+        int p = query2(mid);
+        if(p)
+        {
+            x = mid;
+            l = mid+1;
+        }
+        else
+        {
+            r = mid-1;
+        }
+    }
+
+    auto query3 = [&](int mid){
+        cout << "? " << mid+1 << " ";
+
+        for(int i=1;i<=mid;i++)
+        {
+            cout << i << " ";
+        }
+        cout << z << endl;
+
+        int a; cin>>a;
+
+        return (mid+1-a)%2!=0;
+    };
+
+    l = x+1;
+    r = z-1;
+    int y = -1;
+
+    while(l<=r)
+    {
+        int mid = l + (r-l)/2;
+        int p = query3(mid);
+
+        if(p)
+        {
+            y = mid;
+            r = mid-1;
+        }
+        else
+        {
+            l = mid+1;
+        }
+    }
+
+    cout << "! " << x << " " << y << " " << z << endl;
 }
 
 int32_t main()

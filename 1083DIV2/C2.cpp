@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -325,10 +305,63 @@ vector<int> prefFunc(string &s){
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int MAXN = 1e6+10, inf = ~0U>>2;
+int n, vis[MAXN], chg[8010]; vector<int> a[8010];
+
+void init(vector<int> &now)
+{
+    for(auto &v:now) cin>>v, vis[v]=0;
+    reverse(now.begin(),now.end());
+    vector<int> nw;
+    for(auto &v: now) if(!vis[v]) nw.push_back(v), vis[v]=1;
+    for(auto &v:nw) vis[v]=0;
+
+    now = nw;
+}
+
+void change(vector<int> &now)
+{
+    if(now.size() == 1 && now[0] == inf) return;
+    vector<int> nw;
+    for(auto &v:now) if(!vis[v]) nw.push_back(v);
+    now = nw;
+}
 
 void solve()
-{  
-    
+{   
+   cin>>n;
+   for(int i=1;i<=n;i++)
+   {
+        int _; cin>>_;
+        a[i].resize(_); 
+        init(a[i]);
+        chg[i]=0;
+   }
+
+   for(int i=1;i<=n;i++)
+   {
+        int id = 1;
+        for(int j=1;j<=n;j++)
+        {
+            if(!chg[j]&&a[j]<a[id]) id = j;
+        }
+        auto &now = a[id];
+        for(auto v:now)
+        {
+            cout << v << " ";
+            vis[v]=1;
+        }
+        now = vector<int> {inf}; chg[id] = 1;
+        for(int j=1;j<=n;j++)
+        {
+            if(!chg[j])
+            {
+                change(a[j]);
+            }
+        }
+   }
+   cout << "\n";
+
 }
 
 int32_t main()

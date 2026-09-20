@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -325,10 +305,51 @@ vector<int> prefFunc(string &s){
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int N = 2e5+10;
+vector<int> divisors[N+1];
+
+void find_divisors()
+{
+    for(int i=1;i<=N;i++)
+    {
+        for(int j=i;j<=N;j+=i)
+        {
+            divisors[j].push_back(i);
+        }
+    }
+}
+
+const int mod = 676767677;
 
 void solve()
 {  
-    
+    int x,y; cin>>x>>y;
+    vector<int> A(x+y+1);
+
+    for(int i=1;i<=y;i++)
+    {
+        A[i]=-1;
+    }
+
+    for(int i=y+1;i<=x+y;i++)
+    {
+        A[i]=1;
+    }
+
+    int k = abs(x-y);
+
+    int output = divisors[k].size();
+    output = output%mod;
+
+    cout << output << "\n";
+
+    for(int i=1;i<=x+y;i++)
+    {
+        cout << A[i] << " ";
+    }
+    cout << "\n";
+
+
 }
 
 int32_t main()
@@ -336,6 +357,9 @@ int32_t main()
     ios_base::sync_with_stdio(false);cin.tie(0);cout.precision(20);
 
     //setIO("problemname");
+    find_divisors();
+
+    divisors[0].push_back(1);
 
     int t; cin>>t;
 

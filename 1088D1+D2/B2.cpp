@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -325,10 +305,69 @@ vector<int> prefFunc(string &s){
 	freopen((s + ".out").c_str(), "w", stdout);
 }*/
 
+const int mod = 676767677;
 
 void solve()
 {  
-    
+    int x,y; cin>>x>>y;
+    vector<int> A(x+y+1);
+    vector<int> pf(x+y+1);
+
+    int mn = min(x,y);
+    int left = max(x,y)-mn;
+
+    int ptr = 1;
+
+    if(x>y)
+    {
+        for(int i=0;i<left;i++)
+        {
+            A[ptr] = 1;
+            ++ptr;
+        }
+    }
+
+    for(int i=0;i<mn;i++)
+    {
+        A[ptr] = -1;
+        A[ptr+1] = 1;
+        ptr += 2;
+    }
+
+    if(y>x)
+    {
+        for(int i=0;i<left;i++)
+        {
+            A[ptr] = -1;
+            ++ptr;
+        }
+    }
+
+    for(int i=1;i<=x+y;i++)
+    {
+        pf[i] = pf[i-1] + A[i];
+    }
+
+    int output = 1;
+
+    for(int i=1;i<x+y;i++)
+    {
+        if(pf[i]==pf[x+y]-pf[i])
+        {
+            output = (output+1)%mod;
+        }
+    }
+
+    cout << output << "\n";
+
+    for(int i=1;i<=x+y;i++)
+    {
+        cout << A[i] << " ";
+    }
+    cout << "\n";
+
+
+
 }
 
 int32_t main()

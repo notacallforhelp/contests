@@ -298,26 +298,6 @@ RANDOMIZATION
 mt19937 mt(727);  //gets 32 bits integers randomly generated, seed is 727 to produce reproducible behavior
 uniform_int_distribution uni(1, 3);  // ={1,2,3}
 
-KMP
-
-vector<int> prefFunc(string &s){
-    int n = s.length();
-    vector<int> pi(n);
-
-    for(int i=1;i<n;i++)
-    {
-        int j = pi[i-1];
-        while(j>0&&s[i]!=s[j]){
-            j=pi[j-1];
-        }
-        if(s[i]==s[j]) j++;
-
-        pi[i]=j;
-    }
-
-    return pi;
-}
-
 */
 
 /*void setIO(string s) {
@@ -326,9 +306,73 @@ vector<int> prefFunc(string &s){
 }*/
 
 
+//const int maxedges = 5e8;
+
 void solve()
 {  
-    
+    int p,q; cin>>p>>q;
+
+    for(int i=1;i<=20000;i++)
+    {
+        int edges = 2*(i+1)*i;
+
+        if(edges>p+2*q) break;
+
+        int edges_left = max(0ll,edges-2*q);
+
+        int left_q = max(0ll,q-edges/2);
+
+        int temp = edges_left;
+
+        edges_left = max(0ll,edges_left-p);
+        int left_p = max(0ll,p-temp);
+
+        //cout << edges_left << " " << left_p << " " << left_q << "\n";
+
+        //return;
+
+        if(edges_left>0)
+        {
+            break;
+        }
+
+        int row = i;
+        int col = i;
+
+        if(left_p==0&&left_q==0)
+        {
+            cout << row << " " << col << "\n"; return;
+        }
+
+        if(left_p<(left_q/i)) continue;
+
+        int k = left_q/i;
+        col += k;
+        left_p -= k;
+        left_q -= k*i;
+
+        if(left_p==0&&left_q==0)
+        {
+            cout << row << " " << col << "\n"; return;
+        }
+
+        int blocks_fornext_block = (i-(left_q%i))*2+1;
+
+        if(left_p<blocks_fornext_block) continue;
+
+        left_p -= blocks_fornext_block;
+        ++col;
+
+        if(left_p%(2*i+1)==0)
+        {
+            col += left_p/(2*i+1);
+            cout << row << " " << col << "\n";
+            return;
+        }
+        
+    }
+
+    cout << "-1\n";
 }
 
 int32_t main()
